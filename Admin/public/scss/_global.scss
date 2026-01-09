@@ -1,0 +1,359 @@
+body {
+    font-family: 'roboto', sans-serif;
+    font-size: 14px;
+    background-color: #eeeeee;
+    color: #000;
+}
+
+.content {
+    padding: 20px;
+    margin-top: $height-header;
+    margin-left: $width-sidebar;
+    position: relative;
+    z-index: 1;
+    height: calc(100vh - $height-header);
+}
+
+.page-link {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    right: 20px;
+    display: none;
+    align-items: center;
+    gap: 0 4px;
+    margin-left: 4px;
+
+    span {
+        i {
+            font-size: 10px;
+            color: #555;
+        }
+    }
+
+    a {
+        color: #555;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &.active {
+            color: #000 !important;
+        }
+
+        &:hover {
+            text-decoration: underline;
+            color: #000;
+        }
+    }
+}
+
+.width-50 {
+    width: 50px;
+}
+
+.width-100 {
+    width: 100px;
+}
+
+.width-150 {
+    width: 150px;
+}
+
+.width-200 {
+    width: 200px;
+}
+
+.width-250 {
+    width: 250px;
+}
+
+.width-320 {
+    width: 320px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.width-full {
+    width: 100%;
+}
+
+.rounded-2px {
+    border-radius: 2px !important;
+}
+
+.btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    i {
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    &--submit {
+        color: #fff;
+        background-color: #405189;
+
+        &:hover {
+            background-color: #34426f;
+            border-color: #303c66;
+        }
+    }
+
+    &--share {
+        color: #fff;
+        background-color: #00c689;
+        border-radius: 2px;
+
+        i {
+            margin-right: 8px;
+        }
+
+        &:hover {
+            color: #fff;
+            background-color: #00a06f;
+        }
+    }
+
+    &--destroy {
+        color: #000;
+        background-color: #d2d2dc;
+        &:hover {
+            background-color: #e2e6ea;
+            border-color: #dae0e5;
+        }
+    }
+
+    &--add {
+        color: #000;
+        background-color: #fff;
+        transition: all 0.5s ease;
+
+        &:hover {
+            i {
+                transform: scale(1.2);
+                color: #555;
+            }
+        }
+    }
+}
+
+.btn-action {
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #000;
+    padding: 2px 12px;
+    display: inline-block;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &--view {
+        color: #405189;
+        border-color: #405189;
+
+        &:hover {
+            background-color: #405189;
+            color: #fff;
+        }
+    }
+
+    &--edit {
+        color: #0298cf;
+        border-color: #0298cf;
+
+        &:hover {
+            background-color: #0298cf;
+            color: #fff;
+        }
+    }
+
+    &--delete {
+        color: #ed1c24;
+        border-color: #ed1c24;
+
+        &:hover {
+            background-color: #ed1c24;
+            color: #fff;
+        }
+    }
+
+    &--accept {
+        color: #6200ee;
+        border-color: #6200ee;
+
+        &:hover {
+            background-color: #6200ee;
+            color: #fff;
+        }
+    }
+
+    &--destroy {
+        color: #555;
+        border-color: #555;
+
+        &:hover {
+            background-color: #555;
+            color: #fff;
+        }
+    }
+
+    &--disable {
+        color: #555;
+        border: none;
+        cursor: not-allowed;
+        opacity: 0.6;
+
+        i {
+            padding: 2px 4px;
+            border: 1px solid #555;
+            border-radius: 50%;
+        }
+    }
+
+    &--submit {
+        border-radius: 2px;
+        color: #fff;
+        background-color: #405189;
+        border-color: #405189;
+        padding: 6px 20px;
+
+        &:hover {
+            background-color: #34426f;
+            border-color: #303c66;
+        }
+    }
+
+    &--back {
+        border-radius: 2px;
+        color: #212529;
+        background-color: #f8f9fa;
+        border-color: #f8f9fa;
+        padding: 6px 20px;
+
+        &:hover {
+            background-color: #e2e6ea;
+            border-color: #dae0e5;
+        }
+    }
+}
+
+.btn-status {
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 6px;
+    letter-spacing: 0.2px;
+    display: inline-block;
+    border-radius: 2px;
+
+    &--success {
+        background-color: $primary-color;
+    }
+
+    &--pending {
+        background-color: #f1536e;
+    }
+
+    &--close {
+        background-color: #00c689;
+    }
+}
+
+#table_filter {
+    display: none;
+}
+
+table.dataTable.row-border tbody td {
+    border-color: #f3f3f3;
+    white-space: nowrap;
+}
+
+table.dataTable thead th {
+    text-align: center;
+    border-color: #ccc;
+    white-space: nowrap;
+}
+
+table.dataTable.no-footer {
+    border-color: #ccc;
+}
+
+.dataTables_wrapper.no-footer div.dataTables_scrollBody > table {
+    width: 100% !important;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+    border-bottom: 1px solid #ccc;
+}
+
+.dataTables_scrollBody {
+    &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+        background-color: #fff;
+        // border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+        background-color: #f5f5f5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #ddd;
+        border: none;
+        // border-radius: 10px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: #ccc;
+        }
+    }
+}
+
+table.dataTable tbody th,
+table.dataTable tbody td {
+    padding: 10px 20px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding: 10px 0;
+    padding-right: 20px;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 4px 12px !important;
+
+    &:hover {
+        border: 1px solid $primary-color !important;
+        background: $primary-color !important;
+        color: #fff !important;
+    }
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    border: 1px solid $primary-color !important;
+    background: none !important;
+    color: $primary-color !important;
+}

@@ -1,0 +1,51 @@
+.notificationAction {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+    z-index: 2;
+    display: none;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    &__close {
+        position: absolute;
+        top: 4px;
+        right: 12px;
+        padding: 10px;
+        cursor: pointer;
+
+        &:hover i {
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        i {
+            font-size: 20px;
+            color: #555;
+        }
+    }
+
+    &__content {
+        font-size: 16px;
+    }
+
+    &__button {
+        margin-top: 20px;
+        display: flex;
+        justify-content: end;
+        gap: 0 12px;
+    }
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background-color: #000;
+    z-index: 1;
+    display: none;
+    opacity: 0.2;
+}

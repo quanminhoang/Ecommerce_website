@@ -1,0 +1,190 @@
+.form {
+    background-color: #fff;
+    max-width: 450px;
+    padding: 20px;
+    border: 1px solid #ebebeb;
+    margin-left: 10%;
+
+    &.bill {
+        max-width: 50%;
+        margin-left: 0;
+        flex: 1;
+    }
+
+    .form__title {
+        margin-bottom: 30px;
+
+        h1 {
+            color: #222222;
+            font-size: 20px;
+            line-height: 24px;
+        }
+    }
+
+    .form-group {
+        &.active {
+            textarea,
+            input {
+                border-color: #ea4335 !important;
+                color: #ea4335 !important;
+            }
+
+            .err {
+                color: #ea4335;
+                padding: 8px 0 0 4px;
+                display: block;
+            }
+        }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #ebebeb;
+            outline: none;
+            padding: 12px 8px;
+            transition: $transition-primary;
+            border-radius: 2px;
+
+            &:focus {
+                border-color: #333;
+            }
+        }
+
+        .bill_input {
+            color: #aaa;
+            border: 1px solid #ebebeb !important;
+            line-height: 18px;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid #ebebeb;
+            outline: none;
+            padding: 12px 8px;
+            transition: $transition-primary;
+            border-radius: 2px;
+
+            &:focus {
+                border-color: #333;
+            }
+        }
+    }
+
+    .form-group + .form-group {
+        margin-top: 20px;
+    }
+
+    .form__btn {
+        margin-top: 20px;
+        button {
+            width: 100%;
+            border: none;
+            color: #fff;
+            background-color: $color-primary;
+            padding: 14px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    }
+
+    .form__support {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+
+        a {
+            text-decoration: none;
+            color: #0055aa;
+        }
+    }
+
+    .form__bottom {
+        margin-top: 20px;
+        text-align: center;
+
+        p:first-child {
+            color: #cccccc;
+            font-size: 12px;
+            line-height: 14.4px;
+            padding: 0px 16px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin: 0 auto;
+            margin-bottom: 20px;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                right: 100%;
+                top: 50%;
+                width: 200%;
+                height: 0.5px;
+                background-color: #dbdbdb;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 100%;
+                top: 50%;
+                width: 200%;
+                height: 0.5px;
+                background-color: #dbdbdb;
+            }
+        }
+
+        ul {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            li {
+                list-style: none;
+
+                &:nth-child(1) {
+                    a {
+                        i {
+                            color: #1877f2;
+                        }
+                    }
+                }
+
+                &:nth-child(2) {
+                    a {
+                        i {
+                            color: #ea4335;
+                        }
+                    }
+                }
+
+                a {
+                    text-decoration: none;
+                    color: #333;
+                    display: block;
+                    border: 1px solid rgba(0, 0, 0, 0.26);
+                    border-radius: 2px;
+                    padding: 8px 12px;
+                    min-width: 110px;
+                    transition: $transition-primary;
+
+                    &:hover {
+                        background-color: rgba(0, 0, 0, 0.02);
+                    }
+
+                    i {
+                        font-size: 16px;
+                        margin-right: 2px;
+                    }
+                }
+            }
+        }
+
+        p:last-child {
+            color: rgba(0, 0, 0, 0.26);
+
+            a {
+                text-decoration: none;
+                color: $color-primary;
+            }
+        }
+    }
+}

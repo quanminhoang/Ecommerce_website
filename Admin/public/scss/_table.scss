@@ -1,0 +1,99 @@
+.table-wrapper {
+    border: 1px solid $border-color;
+    background-color: #fff;
+
+    & + & {
+        margin-top: 20px;
+    }
+
+    .table__top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .select_page {
+            select {
+                border: none;
+                padding: 4px 10px;
+                // border-radius: 4px;
+                border-bottom: 1px solid #ccc;
+                background-color: $primary-color;
+                color: #fff;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .table__title {
+        font-size: 18px;
+        letter-spacing: 0.5px;
+        color: #fff;
+    }
+
+    .table__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px 12px 20px;
+        background-color: $primary-color;
+        height: 56px;
+    }
+
+    .table__right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0 20px;
+    }
+}
+
+.table-container {
+    // height: calc(100vh - (107px + 56px));
+    // overflow: auto;
+}
+
+.content-table {
+    min-width: 900px;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+
+    thead {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 1px 2px 0px;
+        text-align: center;
+
+        th {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #999;
+        }
+    }
+
+    tbody {
+        tr {
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f3f3f3;
+        }
+
+        tr:nth-of-type(even) {
+            background-color: #fcfcfc;
+        }
+
+        td {
+            padding: 10px 20px;
+            color: #555;
+
+            img {
+                margin: 0 auto;
+                width: 50px;
+                border-radius: 4px;
+                border: 3px solid #ccc;
+            }
+        }
+    }
+}

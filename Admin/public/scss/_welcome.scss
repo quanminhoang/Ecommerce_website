@@ -1,0 +1,18 @@
+.welcome {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 28px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid $border-color;
+
+    &__text {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 24px;
+        margin: 4px 0px;
+        text-align: left;
+        display: block;
+    }
+}

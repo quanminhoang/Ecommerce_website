@@ -1,0 +1,142 @@
+.bill {
+  padding: 20px 45px;
+  background-color: #fff;
+  border: 1px solid #d2d2dc;
+
+  &__header {
+    margin: 26px 0;
+
+    p {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 28.8px;
+      margin: 48px 0px;
+      text-align: right;
+    }
+  }
+
+  &__content {
+    border-top: 1px solid #d2d2dc;
+    border-bottom: 1px solid #d2d2dc;
+    padding: 58px 0;
+    overflow-x: auto;
+
+    .bill__main {
+      min-width: 800px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+
+      thead {
+        background-color: #08113b;
+
+        tr > th {
+          padding: 15px;
+          color: #fff;
+          text-transform: uppercase;
+          font-weight: 600;
+          text-align: center;
+        }
+
+        // Căn chỉnh theo cột
+        tr > th:nth-child(2) { text-align: left; }   // Sản phẩm
+        tr > th:nth-child(3) { text-align: center; } // Size
+        tr > th:nth-child(4) { text-align: center; } // Số lượng
+        tr > th:nth-child(5),
+        tr > th:nth-child(6) { text-align: right; } // Giá & Tổng
+      }
+
+      tbody {
+        tr > td {
+          padding: 15px;
+          border-top: 1px solid #f3f3f3;
+          vertical-align: middle;
+          text-align: center;
+        }
+
+        // Căn chỉnh theo cột
+        tr > td:nth-child(2) { text-align: left; }
+        tr > td:nth-child(3) { text-align: center; }
+        tr > td:nth-child(4) { text-align: center; }
+        tr > td:nth-child(5),
+        tr > td:nth-child(6) { text-align: right; }
+      }
+    }
+  }
+
+  &__date {
+    margin: 48px 0;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  &__info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+
+    .customer__info {
+      .customer__position {
+        font-size: 14px;
+        line-height: 24px;
+        font-weight: 700;
+      }
+
+      .customer__name {
+        margin-top: 4px;
+      }
+    }
+
+    .bill__receive {
+      text-align: right;
+
+      .receive__title {
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  &__bottom {
+    margin-top: 48px;
+    position: relative;
+
+    p {
+      text-align: right;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+    }
+
+    .bill__action {
+      position: absolute;
+      right: 20px;
+      bottom: -44px;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    margin-top: 48px;
+    justify-content: flex-end;
+    gap: 0 8px;
+  }
+
+  // Responsive table nhỏ hơn 768px
+  @media (max-width: 768px) {
+    padding: 15px 20px;
+
+    &__content .bill__main {
+      min-width: 600px;
+    }
+
+    table thead tr > th,
+    table tbody tr > td {
+      padding: 10px;
+      font-size: 14px;
+    }
+  }
+}

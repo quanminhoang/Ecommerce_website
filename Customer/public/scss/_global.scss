@@ -1,0 +1,149 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+* {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+}
+img,
+picture,
+svg,
+video {
+    display: block;
+    max-width: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    font-family: arial, sans-serif;
+    background-color: $bg-primary;
+    color: $text-primary;
+    font-size: 14px;
+    line-height: 1;
+}
+
+main {
+    padding-top: 25px;
+    min-height: 80vh;
+}
+
+.container {
+    max-width: 1170px;
+    width: 100%;
+    margin: 0 auto;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.overflow--hide {
+    overflow: hidden;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.w-10 {
+    width: 10%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-40 {
+    width: 40%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.d-block {
+    display: block !important;
+}
+
+#toTop {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    bottom: 60px;
+    height: 45px;
+    line-height: 45px;
+    position: fixed;
+    right: calc(50% - 620px);
+    text-decoration: none;
+    width: 50px;
+    text-transform: uppercase;
+    z-index: 100;
+    overflow: hidden;
+    background-color: #000;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    cursor: pointer;
+    display: none;
+
+    &:hover {
+        background-color: $color-primary;
+    }
+
+    i {
+        font-size: 16px;
+        opacity: 0.7;
+    }
+}
+
+.title--border {
+    padding: 1px 0;
+    background-color: $color-primary !important;
+
+    p {
+        border-top: #fff thin dashed;
+        border-bottom: #fff thin dashed;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 15.4px;
+        margin: 1px 0px;
+        padding: 16px 18px 18px;
+        text-transform: uppercase;
+        font-size: 14px;
+
+        i {
+            margin-right: 9px;
+        }
+    }
+}
+
+.breadcrumb {
+    &__container {
+        padding: 18px 0 15px 0;
+        border-bottom: rgba(221, 221, 221, 0.52) thin solid;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 0 4px;
+
+        a {
+            text-decoration: none;
+            color: #000;
+
+            &:last-child {
+                color: #333;
+            }
+        }
+        i {
+            font-size: 8px;
+        }
+    }
+}

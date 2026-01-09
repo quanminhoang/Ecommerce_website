@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title = isset($pageName) ? $pageName : 'Document' ?></title>
-    <base href="/figure_store/customer/">
+    <base href="/Ecommerce_website/customer/">
     <link rel="stylesheet" href="./public/css/main.css">
     <link rel="stylesheet" href="./public/font/font-icon/css/all.css">
 </head>

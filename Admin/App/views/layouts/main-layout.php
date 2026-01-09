@@ -11,7 +11,7 @@
         ?>
     </title>
     <!-- Base href -->
-    <base href="/figure_store/Admin/">
+    <base href="/Ecommerce_website/Admin/">
     <!-- font text -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <!-- font icon -->

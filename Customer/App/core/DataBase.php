@@ -4,7 +4,7 @@ class DataBase
     const HOST = 'localhost';
     const USERNAME = 'root';
     const PASSWORD = '';
-    const DB_NAME = 'figure_store';
+    const DB_NAME = 'Ecommerce_website';
 
     public function HandleConnect()
     {

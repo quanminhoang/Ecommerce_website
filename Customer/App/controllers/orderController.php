@@ -210,8 +210,8 @@ class OrderController extends BaseController
         $orderInfo  = "Thanh toán qua MoMo";
         $amount     = $total;
         $orderId    = time() . "";
-        $redirectUrl = "http://localhost/figure_store/customer/order/thank";
-        $ipnUrl     = "http://localhost/figure_store/customer/order/ipn";
+    $redirectUrl = "http://localhost/Ecommerce_website/customer/order/thank";
+    $ipnUrl     = "http://localhost/Ecommerce_website/customer/order/ipn";
         $requestId  = time() . "";
         $requestType = "captureWallet";
         $extraData  = "";

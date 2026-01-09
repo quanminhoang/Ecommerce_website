@@ -25,7 +25,7 @@ class App
 
         if (empty($_SESSION['customer'])) {
             if ($this->controller == 'OrderController') {
-                header('location:/figure_store/customer/auth');
+                header('location:/Ecommerce_website/customer/auth');
             }
         }
         require_once('./App/controllers/' . $this->controller . '.php');

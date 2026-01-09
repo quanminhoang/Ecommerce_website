@@ -1,11 +1,11 @@
 <div class="sidebar" id="sidebar">
     <div class="sidebar__logo">
-        <a href="/figure_store/Admin/home" class="logo__link"><b>S</b> Smile </a>
+        <a href="/Ecommerce_website/Admin/home" class="logo__link"><b>S</b> Smile </a>
     </div>
     <nav class="menu">
         <ul class="menu__list">
             <li class="menu__item">
-                <a href="/figure_store/Admin/home" class="menu__link 
+                <a href="/Ecommerce_website/Admin/home" class="menu__link 
                 <?php
                 $display = $func->handleActive('home');
                 echo $display['active'];
@@ -16,7 +16,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/brand" class="menu__link
+                <a href="/Ecommerce_website/Admin/brand" class="menu__link
                 <?php
                 echo $func->handleActive('brand')['active'];
                 ?>">
@@ -25,7 +25,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/supplier" class="menu__link
+                <a href="/Ecommerce_website/Admin/supplier" class="menu__link
                 <?php
                 echo $func->handleActive('supplier')['active'];
                 ?>">
@@ -34,7 +34,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/category" class="menu__link
+                <a href="/Ecommerce_website/Admin/category" class="menu__link
                 <?php
                 echo $func->handleActive('category')['active'];
                 ?>">
@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/product" class="menu__link
+                <a href="/Ecommerce_website/Admin/product" class="menu__link
                 <?php
                 echo $func->handleActive('product')['active'];
                 ?>">
@@ -52,7 +52,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/customer" class="menu__link
+                <a href="/Ecommerce_website/Admin/customer" class="menu__link
                 <?php
                 echo $func->handleActive('customer')['active'];
                 ?>">
@@ -61,7 +61,7 @@
                 </a>
             </li>
             <li class="menu__item">
-                <a href="/figure_store/Admin/order" class="menu__link
+                <a href="/Ecommerce_website/Admin/order" class="menu__link
                 <?php
                 echo $func->handleActive('order')['active'];
                 ?>">

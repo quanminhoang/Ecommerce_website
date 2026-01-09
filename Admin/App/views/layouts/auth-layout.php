@@ -10,7 +10,7 @@
         echo $title = isset($pageName) ? $pageName : 'Document';
         ?>
     </title>
-    <base href="/figure_store/Admin/">
+    <base href="/Ecommerce_website/Admin/">
     <link rel="stylesheet" href="./public/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./public/font/font-icon/css/all.css">

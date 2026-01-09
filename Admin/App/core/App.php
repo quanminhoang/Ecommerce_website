@@ -19,7 +19,7 @@ class App
                     $this->controller = 'AuthController';
                 } else {
                     if ($this->controller == 'AuthController') {
-                        header("Location:/figure_store/Admin/home");
+                        header("Location:/Ecommerce_website/Admin/home");
                     }
                 }
                 unset($elementUrlBox[0]);

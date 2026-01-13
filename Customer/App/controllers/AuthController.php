@@ -8,7 +8,6 @@ require './vendor/PHPMailer/src/Exception.php';
 require './vendor/PHPMailer/src/PHPMailer.php';
 require './vendor/PHPMailer/src/SMTP.php';
 
-
 class AuthController extends BaseController
 {
     private $categoryModel;
@@ -23,218 +22,170 @@ class AuthController extends BaseController
     public function sayHi()
     {
         $categories = $this->categoryModel->getCategories();
-        $this->view(
-            'main-layout',
-            [
-                'page' => 'auth/login',
-                'pageName' => 'Đăng nhập',
-                'categories' => $categories
-            ]
-        );
-    }
-
-public function checkEmail()
-{
-    $email = $_POST['email'] ?? '';
-    $customer = $this->customerModel->findEmail($email);
-
-    header('Content-Type: application/json');
-
-    if ($customer) {
-        echo json_encode(['status' => true, 'message' => 'Email đã được đăng ký']);
-    } else {
-        echo json_encode(['status' => false, 'message' => 'Email chưa được đăng ký']);
-    }
-    exit();
-}
-
-
-
-
-
-public function signIn()
-{
-    $email = $_POST['username'];
-    $pass = $_POST['password'];
-    $customer = $this->customerModel->findEmail($email);
-
-    header('Content-Type: application/json');
-
-    if ($customer) {
-        if ($pass == $customer['Password']) {
-            $_SESSION['customer'] = $customer;
-            echo json_encode([
-                'status' => true,
-                'message' => 'Đăng nhập thành công'
-            ]);
-        } else {
-            echo json_encode([
-                'status' => false,
-                'field' => 'password',
-                'message' => 'Mật khẩu không chính xác'
-            ]);
-        }
-    } else {
-        echo json_encode([
-            'status' => false,
-            'field' => 'username',
-            'message' => 'Email không tồn tại'
+        $this->view('main-layout', [
+            'page' => 'auth/login',
+            'pageName' => 'Đăng nhập',
+            'categories' => $categories
         ]);
     }
-    exit();
-}
+
+    public function checkEmail()
+    {
+        $email = $_POST['email'] ?? '';
+        $customer = $this->customerModel->findEmail($email);
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => (bool)$customer,
+            'message' => $customer ? 'Email đã được đăng ký' : 'Email chưa được đăng ký'
+        ]);
+        exit();
+    }
+
+    public function signIn()
+    {
+        $email = $_POST['username'] ?? '';
+        $pass = $_POST['password'] ?? '';
+        $customer = $this->customerModel->findEmail($email);
+
+        header('Content-Type: application/json');
+        if ($customer) {
+            if ($pass == $customer['Password']) {
+                $_SESSION['customer'] = $customer;
+                echo json_encode(['status' => true, 'message' => 'Đăng nhập thành công']);
+            } else {
+                echo json_encode(['status' => false, 'field' => 'password', 'message' => 'Mật khẩu không chính xác']);
+            }
+        } else {
+            echo json_encode(['status' => false, 'field' => 'username', 'message' => 'Email không tồn tại']);
+        }
+        exit();
+    }
 
     public function register()
     {
         $categories = $this->categoryModel->getCategories();
-        $this->view(
-            'main-layout',
-            [
-                'page' => 'auth/register',
-                'pageName' => 'Đăng ký',
-                'categories' => $categories
-            ]
-        );
+        $this->view('main-layout', [
+            'page' => 'auth/register',
+            'pageName' => 'Đăng ký',
+            'categories' => $categories
+        ]);
+    }
+
+    // Hàm phụ trợ cấu hình và gửi Email
+    private function sendOTPMail($toEmail, $toName, $otpCode)
+    {
+        $mail = new PHPMailer(true);
+        try {
+            // Cấu hình Server
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com';
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'phatlu678@gmail.com'; 
+            $mail->Password   = 'hbht kgyc erkd tlar'; // Đảm bảo đây là Mật khẩu ứng dụng 16 ký tự
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port       = 587;
+            $mail->CharSet    = 'UTF-8';
+
+            // Người nhận
+            $mail->setFrom('kongtu2x@gmail.com', 'Figure Store Support');
+            $mail->addAddress($toEmail, $toName);
+
+            // Nội dung
+            $mail->isHTML(true);
+            $mail->Subject = 'MÃ XÁC THỰC OTP ĐĂNG KÝ TÀI KHOẢN';
+            $mail->Body    = "<h3>Xin chào {$toName},</h3>
+                             <p>Mã OTP của bạn là: <b style='font-size: 20px; color: red;'>{$otpCode}</b></p>
+                             <p>Mã này dùng để xác thực tài khoản của bạn. Vui lòng không cung cấp mã này cho bất kỳ ai.</p>";
+
+            return $mail->send();
+        } catch (Exception $e) {
+            return false;
+        }
     }
 
     public function verify()
     {
         $categories = $this->categoryModel->getCategories();
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $pass = $_POST['pass'];
-        $pass_r = $_POST['pass_r'];
-        $birthday = $_POST['birthday'];
-        $address = $_POST['address'];
-        $phoneNumber = $_POST['phoneNumber'];
-        $code = rand(0000, 9999);
+        $name        = $_POST['name'] ?? '';
+        $email       = $_POST['email'] ?? '';
+        $pass        = $_POST['pass'] ?? '';
+        $birthday    = $_POST['birthday'] ?? '';
+        $address     = $_POST['address'] ?? '';
+        $phoneNumber = $_POST['phoneNumber'] ?? '';
+        $code        = rand(1000, 9999);
 
-        $customer = $this->customerModel->findEmail($email); //Tìm email
-        $verifyEmail = $this->customerModel->emailVerify($email);
-        if ($customer) {
-            echo "Email đã tồn tại";
-        } else {
-            if ($name || $email || $pass || $pass_r || $birthday ||  $address || $phoneNumber) {
-                if ($verifyEmail) {
-                    $data = [
-                        'Name' => $name,
-                        'Password' => $pass,
-                        'Birthday' => $birthday,
-                        'Address' => $address,
-                        'PhoneNumber' => $phoneNumber,
-                        'code' => $code
-                    ];
-                    $this->customerModel->updateCustomer($verifyEmail['ID'], $data);
-                    try {
-                        //Create an instance; passing `true` enables exceptions
-                        $mail = new PHPMailer();
-                        $mail->isSMTP();
-                        $mail->Host = 'smtp.gmail.com';
-                        $mail->SMTPAuth = true;
-                        $mail->Username = 'kongtu2x@gmail.com';
-                        $mail->Password = 'dangioexefxpiced';
-                        $mail->Port = 465;
-                        $mail->SMTPSecure = 'ssl';
-
-                        //Recipients
-                        $mail->setFrom('Mohinh123@gmail.com', 'Figure Store');
-                        $mail->addAddress($email);
-
-                        //Content
-                        $mail->isHTML(true);                                  //Set email format to HTML
-                        $mail->Subject = 'CODE OTP';
-                        $mail->Body    = "Code OTP create account: <b>${code}</b>";
-
-                        $mail->send();
-                    } catch (Exception $e) {
-                        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-                    }
-                } else {
-                    try {
-                        //Create an instance; passing `true` enables exceptions
-                        $mail = new PHPMailer();
-                        $mail->isSMTP();
-                        $mail->Host = 'smtp.gmail.com';
-                        $mail->SMTPAuth = true;
-                        $mail->Username = 'kongtu2x@gmail.com';
-                        $mail->Password = 'dangioexefxpiced';
-                        $mail->Port = 465;
-                        $mail->SMTPSecure = 'ssl';
-
-                        //Recipients
-                        $mail->setFrom('Mohinh123@gmail.com', 'Figure Store');
-                        $mail->addAddress($email);
-
-                        //Content
-                        $mail->isHTML(true);                                  //Set email format to HTML
-                        $mail->Subject = 'CODE OTP';
-                        $mail->Body    = "Code OTP create account: <b>${code}</b>";
-
-                        $mail->send();
-                    } catch (Exception $e) {
-                        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-                    }
-                    $data = [
-                        'Name' => $name,
-                        'Email' => $email,
-                        'Password' => $pass,
-                        'Birthday' => $birthday,
-                        'Address' => $address,
-                        'PhoneNumber' => $phoneNumber,
-                        'code' => $code,
-                    ];
-
-                    $this->customerModel->createCustomer($data);
-                }
-            } else {
-                header("location:register");
-            }
+        // Kiểm tra email tồn tại
+        $customer = $this->customerModel->findEmail($email);
+        if ($customer && $customer['verify'] == 1) {
+            echo "Email đã tồn tại và đã được xác thực!";
+            return;
         }
-        $this->view(
-            'main-layout',
-            [
-                'page' => 'auth/otp',
-                'pageName' => 'Xác thực',
-                'categories' => $categories,
-                'email' => $email
-            ]
-        );
+
+        if (!empty($name) && !empty($email) && !empty($pass)) {
+            $data = [
+                'Name' => $name,
+                'Email' => $email,
+                'Password' => $pass,
+                'Birthday' => $birthday,
+                'Address' => $address,
+                'PhoneNumber' => $phoneNumber,
+                'code' => $code
+            ];
+
+            // Lưu hoặc cập nhật thông tin khách hàng tạm thời
+            $verifyEmail = $this->customerModel->emailVerify($email);
+            if ($verifyEmail) {
+                $this->customerModel->updateCustomer($verifyEmail['ID'], $data);
+            } else {
+                $this->customerModel->createCustomer($data);
+            }
+
+            // Gửi Mail
+            if ($this->sendOTPMail($email, $name, $code)) {
+                $this->view('main-layout', [
+                    'page' => 'auth/otp',
+                    'pageName' => 'Xác thực',
+                    'categories' => $categories,
+                    'email' => $email
+                ]);
+            } else {
+                echo "Không thể gửi mail. Vui lòng kiểm tra lại cấu hình SMTP hoặc kết nối internet.";
+            }
+        } else {
+            header("location:register");
+            exit();
+        }
     }
 
     public function submitVerify()
     {
-        $email =  $_POST['email'];
+        $email = $_POST['email'] ?? '';
+        $otp   = $_POST['otp'] ?? '';
         $categories = $this->categoryModel->getCategories();
-        if (isset($_POST['otp'])) {
-            $otp =  $_POST['otp'];
+
+        if (!empty($otp)) {
             $verifyEmail = $this->customerModel->emailVerify($email);
-            if ($verifyEmail['code'] === $otp) {
+            
+            if ($verifyEmail && $verifyEmail['code'] == $otp) {
+                // Xác thực thành công
                 $this->customerModel->updateCustomer($verifyEmail['ID'], ['verify' => 1]);
                 header("location:sayHi");
+                exit();
             } else {
-                $this->view(
-                    'main-layout',
-                    [
-                        'page' => 'auth/otp',
-                        'pageName' => 'Xác thực',
-                        'categories' => $categories,
-                        'email' => $email,
-                        'err' => 'Mã OTP không chính xác'
-                    ]
-                );
+                $err = 'Mã OTP không chính xác';
             }
         } else {
-            $this->view(
-                'main-layout',
-                [
-                    'page' => 'auth/otp',
-                    'pageName' => 'Xác thực',
-                    'categories' => $categories,
-                    'email' => $email,
-                    'err' => 'Vui lòng nhập mã OTP'
-                ]
-            );
+            $err = 'Vui lòng nhập mã OTP';
         }
+
+        $this->view('main-layout', [
+            'page' => 'auth/otp',
+            'pageName' => 'Xác thực',
+            'categories' => $categories,
+            'email' => $email,
+            'err' => $err
+        ]);
     }
 
     public function logout()
@@ -244,7 +195,4 @@ public function signIn()
             header('Location: ../home');
         }
     }
-
-    
 }
-

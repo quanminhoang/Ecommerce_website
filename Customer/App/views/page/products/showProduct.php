@@ -18,34 +18,40 @@
             <div class="productDetail__content">
                 <h1 class="content__title"><?php echo $product['Name'] ?></h1>
 
-                <?php 
-                    // -----------------------------------------------------------
-                    // LOGIC TÍNH GIÁ TỰ ĐỘNG (Fix lỗi Database lưu sai giá)
-                    // -----------------------------------------------------------
-                    $originalPrice = $product['Price']; // Giá gốc
-                    $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0; // % Giảm
-                    
-                    // Tự tính giá sau giảm
-                    if ($discount > 0) {
-                        $finalPrice = $originalPrice - ($originalPrice * ($discount / 100));
-                    } else {
-                        $finalPrice = $originalPrice;
-                    }
+                <?php
+                // -----------------------------------------------------------
+                // LOGIC TÍNH GIÁ & KIỂM TRA KHUYẾN MÃI (Sửa lỗi gạch giá)
+                // -----------------------------------------------------------
+                $originalPrice = (float)$product['Price']; // Giá gốc
+                $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0; // % Giảm
+
+                // Tính giá sau giảm
+                if ($discount > 0) {
+                    $finalPrice = $originalPrice - ($originalPrice * ($discount / 100));
+                } else {
+                    $finalPrice = $originalPrice;
+                }
+
+                // ĐIỀU KIỆN HIỂN THỊ: Chỉ coi là khuyến mãi nếu % giảm > 0 VÀ giá mới thấp hơn giá cũ
+                $isDiscounted = ($discount > 0 && $finalPrice < $originalPrice);
                 ?>
 
-                <p class="content__price">
-                    <?php if ($discount > 0): ?>
+                <p class="content__price" style="text-decoration: none !important;">
+                    <?php if ($isDiscounted): ?>
                         <span style="text-decoration: line-through; color: #888; font-size: 18px; margin-right: 10px;">
                             <?php echo number_format($originalPrice, 0, '.', '.'); ?> đ
                         </span>
-                        <span style="color: #d70018; font-weight: bold; font-size: 24px;">
+
+                        <span style="color: #d70018; font-weight: bold; font-size: 24px; text-decoration: none;">
                             <?php echo number_format($finalPrice, 0, '.', '.'); ?> đ
                         </span>
-                        <span style="background: #d70018; color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px; vertical-align: text-top; margin-left: 5px;">
+
+                        <span style="background: #d70018; color: #fff; border-radius: 5px; padding: 3px 6px; font-size: 12px; vertical-align: text-top; margin-left: 5px; text-decoration: none;">
                             -<?php echo $discount; ?>%
                         </span>
+
                     <?php else: ?>
-                        <span style="color: #d70018; font-weight: bold; font-size: 24px;">
+                        <span style="color: #d70018; font-weight: bold; font-size: 24px; text-decoration: none !important;">
                             <?php echo number_format($originalPrice, 0, '.', '.'); ?> đ
                         </span>
                     <?php endif; ?>
@@ -86,8 +92,8 @@
                                 <input type="hidden" name="name" value="<?php echo $product['Name'] ?>">
                                 <input type="hidden" name="size" value="<?php echo trim($product['Size'], ',') . ' cm'; ?>">
                                 <input type="hidden" name="img" value="<?php echo $product['Img'] ?>">
-                                
-                                <input type="hidden" name="promotionPrice" value="<?php echo $finalPrice; ?>">
+
+                                <input type="hidden" name="promotionPrice" value="<?php echo $isDiscounted ? $finalPrice : $originalPrice; ?>">
 
                                 <button type="submit">
                                     <i class="fa-solid fa-cart-shopping"></i>

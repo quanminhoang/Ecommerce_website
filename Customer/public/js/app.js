@@ -35,6 +35,7 @@ const app = {
                 document.documentElement.scrollTop = 0;
             };
         };
+        
     },
 
     // function start

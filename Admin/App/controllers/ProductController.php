@@ -52,6 +52,11 @@ class ProductController extends BaseController
             ? floatval($_POST['promotionPrice'])
             : $price;
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : 0;
+        
+        // --- MỚI THÊM: Lấy số lượng từ form ---
+        $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
+        // -------------------------------------
+
         $sizeProduct = $_POST['size'];
         $hot = $_POST['hot'];
         $description = $_POST['description'];
@@ -68,8 +73,6 @@ class ProductController extends BaseController
         $fileName = explode('.', $fileName);
         $ext = end($fileName);
         $new_file_name = md5(uniqid()) . '.' . $ext;
-
-
 
 
         if (
@@ -99,6 +102,7 @@ class ProductController extends BaseController
                 'Price' => $price,
                 'PromotionPrice' => $promotionPrice,
                 'Discount' => $discount ? $discount : 0,
+                'Quantity' => $quantity, // --- MỚI THÊM: Lưu số lượng ---
                 'Hot' => $hot,
                 'Size' => $sizeProduct,
                 'Img' => $new_file_name,
@@ -163,6 +167,12 @@ class ProductController extends BaseController
 
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : $product['Discount'];
 
+        // --- MỚI THÊM: Lấy số lượng khi update ---
+        // Kiểm tra xem $product['Quantity'] có tồn tại không để tránh lỗi nếu DB cũ chưa có cột này
+        $currentQty = isset($product['Quantity']) ? $product['Quantity'] : 0;
+        $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : $currentQty;
+        // -----------------------------------------
+
         $sizeProduct = $_POST['size'];
         $hot = $_POST['hot'];
         $description = $_POST['description'];
@@ -215,6 +225,12 @@ class ProductController extends BaseController
         if ($discount != $product['Discount']) {
             $data['Discount'] = $discount;
         }
+
+        // --- MỚI THÊM: Kiểm tra thay đổi số lượng ---
+        if ($quantity != $currentQty) {
+            $data['Quantity'] = $quantity;
+        }
+        // --------------------------------------------
 
         if ($sizeProduct != $product['Size']) {
             $data['Size'] = $sizeProduct;

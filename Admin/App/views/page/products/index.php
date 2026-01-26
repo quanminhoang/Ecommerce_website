@@ -28,6 +28,7 @@
                     <th class="width-200">Hình ảnh</th>
                     <th class="width-320">Tên</th>
                     <th class="width-150">Danh mục</th>
+                    <th class="width-100">Tồn kho</th>
                     <th class="width-150">Giá</th>
                     <th class="width-250">Hành động</th>
                 </tr>
@@ -45,17 +46,52 @@
                         <td class="width-100"> <img src="../product_img/<?php echo $product['Img'] ?>" alt=""></td>
                         <td class=""><?php echo $product['productName'] ?> </td>
                         <td class="width-150"><?php echo $product['categoryName'] ?> </td>
-                        <td class="width-150 text-right">
-                            <b style="text-decoration: line-through;">
-                                <?php echo number_format($product['Price'], 0, '.', '.');  ?>
-                            </b>
-                            <br />
-                            <?php echo number_format($product['PromotionPrice'], 0, '.', '.');  ?>
-                            <br />
-                            <b style="color:#ff0000; <?php echo $discount = $product['Discount'] == 0 ? 'display: none;' : '' ?>">
-                                - <?php echo $product['Discount'] . '%' ?>
-                            </b>
+
+                        <td class="width-100 text-center">
+                            <?php
+                            // Logic: Nếu <= 0 thì hiện chữ Hết hàng màu đỏ
+                            if (!isset($product['Quantity']) || $product['Quantity'] <= 0) {
+                                echo '<span style="color: red; font-weight: bold;">Hết hàng</span>';
+                            } else {
+                                echo $product['Quantity'];
+                            }
+                            ?>
                         </td>
+
+                        <td class="width-150 text-right">
+                            <?php
+                            // 1. Lấy dữ liệu gốc
+                            $price = $product['Price'];
+                            $discount = $product['Discount'];
+
+                            // 2. Tính toán lại giá khuyến mãi
+                            // Nếu có giảm giá (>0), ta tự tính toán luôn, không phụ thuộc vào database nữa
+                            if ($discount > 0) {
+                                $promotionPrice = $price - ($price * ($discount / 100));
+                            } else {
+                                $promotionPrice = $product['PromotionPrice'];
+                            }
+                            ?>
+
+                            <?php if ($discount > 0) { ?>
+                                <span style="text-decoration: line-through; color: #888; font-size: 13px;">
+                                    <?php echo number_format($price, 0, '.', '.'); ?> đ
+                                </span>
+                                <br />
+                                <span style="color: #dc3545; font-weight: bold;">
+                                    <?php echo number_format($promotionPrice, 0, '.', '.'); ?> đ
+                                </span>
+                                <br />
+                                <small style="color: #dc3545; font-weight: bold;">
+                                    - <?php echo $discount ?>%
+                                </small>
+                            <?php } else { ?>
+                                <span style="font-weight: bold; color: #333;">
+                                    <?php echo number_format($price, 0, '.', '.'); ?> đ
+                                </span>
+                            <?php } ?>
+                        </td>
+
                         <td class="width-250 text-center">
                             <a href="product/edit/<?php echo $product['ID'] ?>" class="btn-action btn-action--edit">Chi tiết</a>
                             <a class="btn-action btn-action--delete" onclick="handleNotification(<?php echo $product['ID'] ?>, 'Bạn có chắc muốn xóa sản phẩm này ?','product/delete');">Xóa</a>

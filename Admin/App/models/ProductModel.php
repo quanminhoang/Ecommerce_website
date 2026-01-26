@@ -10,7 +10,8 @@ class ProductModel extends BaseModel
 
     public function getPropertyProducts()
     {
-        $sql = " SELECT products.ID, products.Img, products.Name as productName, products.Price, products.PromotionPrice, products.Discount, products.Hot, products.ViewCount, categories.Name as categoryName 
+        // ĐÃ SỬA: Thêm products.Quantity vào dòng dưới đây
+        $sql = " SELECT products.ID, products.Quantity, products.Img, products.Name as productName, products.Price, products.PromotionPrice, products.Discount, products.Hot, products.ViewCount, categories.Name as categoryName 
         FROM products, categories 
         WHERE products.Status = 1 
         AND products.CateID = categories.ID";
@@ -53,7 +54,8 @@ class ProductModel extends BaseModel
 
     public function searchProduct($name)
     {
-        $sql = " SELECT products.ID, products.Img, products.Name as productName, products.Price, products.PromotionPrice, products.Discount, products.Hot, products.ViewCount, categories.Name as categoryName 
+        // ĐÃ SỬA: Thêm products.Quantity vào đây nữa để khi tìm kiếm vẫn hiện số lượng
+        $sql = " SELECT products.ID, products.Quantity, products.Img, products.Name as productName, products.Price, products.PromotionPrice, products.Discount, products.Hot, products.ViewCount, categories.Name as categoryName 
         FROM products, categories 
         WHERE products.Status = 1 
         AND categories.status = 1 

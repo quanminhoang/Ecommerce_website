@@ -26,12 +26,19 @@
             </div>
             <div class="form-group">
                 <label for="">
-                    Giảm
+                    Giảm (%)
                 </label>
                 <input type="text" placeholder="Nhập % giảm giá" name="discount">
             </div>
-
-        </div>
+            
+            <div class="form-group">
+                <label for="">
+                    Số lượng tồn kho
+                    <b>(*)</b>
+                </label>
+                <input type="number" min="0" value="0" placeholder="Nhập số lượng hàng" name="quantity">
+            </div>
+            </div>
         <div class="form-right">
             <div class="form-container">
                 <div class="form-group">

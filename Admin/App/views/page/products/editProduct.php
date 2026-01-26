@@ -16,20 +16,28 @@
                     Giá
                     <b>(*)</b>
                 </label>
-                <input type="text" placeholder="Nhập giá sản phẩm" name="price" value="<?php echo $product['Price'] ?>">
+                <input type="text" id="price" placeholder="Nhập giá sản phẩm" name="price" value="<?php echo $product['Price'] ?>">
             </div>
             <div class="form-group">
                 <label for="">
                     Giá Khuyến mãi
                     <b>(*)</b>
                 </label>
-                <input type="text" placeholder="Nhập giá khuyến mãi" name="promotionPrice" value=" <?php echo $product['PromotionPrice'] ?>">
+                <input type="text" id="promotionPrice" placeholder="Nhập giá khuyến mãi" name="promotionPrice" value="<?php echo trim($product['PromotionPrice']); ?>">
             </div>
             <div class="form-group">
-                <label for="">Giảm</label>
-                <input type="text" placeholder="Nhập % giảm giá" name="discount" value=" <?php echo $product['Discount'] ?>">
+                <label for="">Giảm (%)</label>
+                <input type="text" id="discount" placeholder="Nhập % giảm giá" name="discount" value="<?php echo trim($product['Discount']); ?>">
             </div>
 
+            <div class="form-group">
+                <label for="">
+                    Số lượng tồn kho
+                    <b>(*)</b>
+                </label>
+                <input type="number" min="0" placeholder="Nhập số lượng hàng" name="quantity" 
+                       value="<?php echo isset($product['Quantity']) ? $product['Quantity'] : 0; ?>">
+            </div>
         </div>
         <div class="form-right">
             <div class="form-container">
@@ -103,55 +111,94 @@
                     Mô tả
                     <b>(*)</b>
                 </label>
-                <textarea name='description' placeholder="Nhập mô tả sản phẩm" id='ckeditor'>
-                    <?php echo $product['Description'] ?>
-                </textarea>
+                <textarea name='description' placeholder="Nhập mô tả sản phẩm" id='ckeditor'><?php echo $product['Description'] ?></textarea>
             </div>
             <div class="form-group">
                 <label for="">
                     Thông tin chi tiết
                     <b>(*)</b>
                 </label>
-                <textarea name='detail' placeholder="Nhập mô tả sản phẩm" id='ckeditor1'>
-                <?php echo $product['Detail'] ?>
-                </textarea>
+                <textarea name='detail' placeholder="Nhập mô tả sản phẩm" id='ckeditor1'><?php echo $product['Detail'] ?></textarea>
             </div>
         </div>
     </div>
     <div class="form-button">
-        <button type="submit" class="btn-action btn-action--submit">Lưu</button>
+        <button type="submit" class="btn-action btn-action--submit">Lưu thay đổi</button>
         <a href="product" class="btn-action btn-action--back">Quay lại</a>
     </div>
 </form>
+
 <script>
-    // Preview Img Input
-    const fileValue = document.getElementById('file');
-    fileValue.onchange = evt => {
-        const [file] = fileValue.files
-        if (file) {
-            blah.src = URL.createObjectURL(file)
+    // ---------------------------------------------------------
+    // 1. TÍNH TOÁN GIÁ TỰ ĐỘNG (Logic mới thêm vào)
+    // ---------------------------------------------------------
+    const priceInput = document.getElementById('price');
+    const discountInput = document.getElementById('discount');
+    const promotionPriceInput = document.getElementById('promotionPrice');
+
+    const calculatePrice = () => {
+        // Lấy giá trị, xóa dấu chấm phân cách nếu có
+        let priceRaw = priceInput.value;
+        if (priceRaw) {
+            priceRaw = priceRaw.toString().replace(/\./g, '');
+        }
+
+        let price = parseFloat(priceRaw) || 0;
+        let discount = parseFloat(discountInput.value) || 0;
+
+        // Giới hạn %
+        if (discount > 100) discount = 100;
+        if (discount < 0) discount = 0;
+
+        // Tính toán
+        if (price > 0) {
+            let finalPrice = price - (price * (discount / 100));
+            promotionPriceInput.value = Math.round(finalPrice);
+        } else {
+            promotionPriceInput.value = 0;
         }
     }
 
+    // Lắng nghe sự kiện thay đổi
+    if (priceInput && discountInput && promotionPriceInput) {
+        priceInput.addEventListener('input', calculatePrice);
+        discountInput.addEventListener('input', calculatePrice);
+        priceInput.addEventListener('keyup', calculatePrice);
+        discountInput.addEventListener('keyup', calculatePrice);
+
+        // QUAN TRỌNG: Chạy hàm này ngay lập tức khi trang vừa load
+        // Để sửa lỗi giá hiển thị 1.000.000 thành 700.000
+        calculatePrice();
+    }
+
+
+    // ---------------------------------------------------------
+    // 2. Preview Ảnh (Code cũ)
+    // ---------------------------------------------------------
     const fileInput = document.getElementById('file');
-    const blah = document.getElementById('blah'); // Khai báo img element
+    const blah = document.getElementById('blah'); 
 
-    fileInput.addEventListener('change', (evt) => {
-        const [file] = fileInput.files;
-        if (file) {
-            blah.src = URL.createObjectURL(file);
+    if (fileInput) {
+        fileInput.onchange = evt => {
+            const [file] = fileInput.files
+            if (file) {
+                blah.src = URL.createObjectURL(file)
+            }
         }
-    });
+    }
 
-    // -----------------------
-    // Ckeditor
-    // CKEDITOR.replace('ckeditor');
-    // CKEDITOR.replace('ckeditor1');
-    ClassicEditor.create(document.querySelector('#ckeditor')).catch((error) => {
-        console.error(error);
-    });
+    // ---------------------------------------------------------
+    // 3. Ckeditor (Code cũ)
+    // ---------------------------------------------------------
+    if(document.querySelector('#ckeditor')) {
+        ClassicEditor.create(document.querySelector('#ckeditor')).catch((error) => {
+            console.error(error);
+        });
+    }
 
-    ClassicEditor.create(document.querySelector('#ckeditor1')).catch((error) => {
-        console.error(error);
-    });
+    if(document.querySelector('#ckeditor1')) {
+        ClassicEditor.create(document.querySelector('#ckeditor1')).catch((error) => {
+            console.error(error);
+        });
+    }
 </script>

@@ -19,10 +19,14 @@
                     <tbody>
                         <?php
                         $total = 0;
-                        if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                        // Biến kiểm tra giỏ hàng có trống không
+                        $hasCart = false; 
+
+                        if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+                            $hasCart = true; // Đánh dấu là có hàng
                             foreach ($_SESSION['cart'] as $key => $value) {
-                        $priceToUse = $value['PromotionPrice'] > 0 ? $value['PromotionPrice'] : $value['Price'];
-                        $total += $priceToUse * $value['Quantity'];
+                                $priceToUse = $value['PromotionPrice'] > 0 ? $value['PromotionPrice'] : $value['Price'];
+                                $total += $priceToUse * $value['Quantity'];
                         ?>
                                 <tr>
                                     <td>
@@ -50,9 +54,13 @@
                                     </td>
                                 </tr>
                         <?php }
+                        } else {
+                            // Hiển thị thông báo nếu giỏ hàng trống (Tuỳ chọn)
+                            echo '<tr><td colspan="6" style="text-align:center; padding: 20px;">Giỏ hàng của bạn đang trống!</td></tr>';
                         } ?>
                     </tbody>
                 </table>
+                
                 <div class="table__bottom">
                     <div class="table__total">
                         <p>Tổng giá sản phẩm</p>
@@ -60,7 +68,13 @@
                     </div>
                     <form class="table__pay" action="order/pay" method="POST">
                         <input type="hidden" name="total" value="<?php echo $total; ?>">
-                        <button type="submit">Tiến hành thanh toán</button>
+                        
+                        <?php if ($hasCart): ?>
+                            <button type="submit" style="cursor: pointer; opacity: 1;">Tiến hành thanh toán</button>
+                        <?php else: ?>
+                            <button type="button" disabled style="cursor: not-allowed; opacity: 0.5; background-color: #ccc;">Tiến hành thanh toán</button>
+                        <?php endif; ?>
+                        
                     </form>
                 </div>
             </div>

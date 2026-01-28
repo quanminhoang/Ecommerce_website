@@ -7,6 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 require './vendor/PHPMailer/src/Exception.php';
 require './vendor/PHPMailer/src/PHPMailer.php';
 require './vendor/PHPMailer/src/SMTP.php';
+
 class OrderController extends BaseController
 {
     private $productModel;
@@ -183,10 +184,16 @@ class OrderController extends BaseController
         // --- Insert chi tiết giỏ hàng ---
         $insertValues = [];
         foreach ($_SESSION['cart'] as $value) {
-            $qty   = intval($value['Quantity']);
-            $price = floatval($value['PromotionPrice']);
-            $size  = addslashes($value['Size']);
+            $qty    = intval($value['Quantity']);
+            $price  = floatval($value['PromotionPrice']);
+            $size   = addslashes($value['Size']);
             $prodId = intval($value['ID']);
+
+            // ============================================================
+            // ĐÃ SỬA: THÊM DÒNG NÀY ĐỂ TRỪ KHO
+            $this->productModel->minusStock($prodId, $qty);
+            // ============================================================
+
             $insertValues[] = "($qty, $price, '$size', $prodId, $order_id)";
         }
         $sql = "INSERT INTO orderDetails(Quantity, Price, Size, ProductID, OrderID) 
@@ -210,8 +217,8 @@ class OrderController extends BaseController
         $orderInfo  = "Thanh toán qua MoMo";
         $amount     = $total;
         $orderId    = time() . "";
-    $redirectUrl = "http://localhost/Ecommerce_website/customer/order/thank";
-    $ipnUrl     = "http://localhost/Ecommerce_website/customer/order/ipn";
+        $redirectUrl = "http://localhost/Ecommerce_website/customer/order/thank";
+        $ipnUrl     = "http://localhost/Ecommerce_website/customer/order/ipn";
         $requestId  = time() . "";
         $requestType = "captureWallet";
         $extraData  = "";

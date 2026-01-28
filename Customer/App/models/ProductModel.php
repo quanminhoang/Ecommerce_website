@@ -36,4 +36,16 @@ class ProductModel extends BaseModel
         $sql = "SELECT * FROM products WHERE products.Name like '%${name}%' AND products.status = 1";
         return  $this->querySql($sql);
     }
+    public function minusStock($productId, $quantity)
+    {
+        $productId = intval($productId);
+        $quantity = intval($quantity);
+
+        // Trừ số lượng tồn kho
+        $sql = "UPDATE products 
+                SET Quantity = Quantity - $quantity 
+                WHERE ID = $productId";
+        
+        return $this->querySql($sql);
+    }
 }

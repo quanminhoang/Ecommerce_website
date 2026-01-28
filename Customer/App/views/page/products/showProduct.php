@@ -16,14 +16,14 @@
             </div>
 
             <div class="productDetail__content">
-                <h1 class="content__title"><?php echo $product['Name'] ?></h1>
-
+                <h1 class="content__title"
+                    style="color: black; font-size: 24px; text-transform: uppercase;">
+                    <?php echo $product['Name'] ?>
+                </h1>
                 <?php
-                // -----------------------------------------------------------
-                // LOGIC TÍNH GIÁ & KIỂM TRA KHUYẾN MÃI (Sửa lỗi gạch giá)
-                // -----------------------------------------------------------
-                $originalPrice = (float)$product['Price']; // Giá gốc
-                $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0; // % Giảm
+  
+                $originalPrice = (float)$product['Price'];
+                $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0; 
 
                 // Tính giá sau giảm
                 if ($discount > 0) {
@@ -76,39 +76,57 @@
                         </div>
                     </div>
 
-                    <div class="stock-control">
+                    <div class="stock-control" style="display: block;">
                         <?php if ($stockQty > 0): ?>
-                            <p style="color: #28a745; font-weight: bold; margin-bottom: 10px; line-height: 1.5;">
-                                <i class="fa-solid fa-check"></i> Còn hàng <br>
-                                <span style="color: #28a745; font-weight: bold; margin-bottom: 10px; line-height: 1.5;">
-                                    (Sẵn có: <?php echo $stockQty; ?>)
-                                </span>
-                            </p>
 
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <label for="quantity">Số lượng:</label>
-                                <input type="number" id="quantity" value="1" min="1" max="<?php echo $stockQty; ?>" name="quantity" style="width: 70px; padding: 5px;">
-
-                                <input type="hidden" name="name" value="<?php echo $product['Name'] ?>">
-                                <input type="hidden" name="size" value="<?php echo trim($product['Size'], ',') . ' cm'; ?>">
-                                <input type="hidden" name="img" value="<?php echo $product['Img'] ?>">
-
-                                <input type="hidden" name="promotionPrice" value="<?php echo $isDiscounted ? $finalPrice : $originalPrice; ?>">
-
-                                <button type="submit">
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                    Thêm vào giỏ
-                                </button>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                                <input type="number"
+                                    id="quantity"
+                                    value="1"
+                                    min="1"
+                                    max="<?php echo $stockQty; ?>"
+                                    name="quantity"
+                                    style="width: 80px; padding: 6px;">
                             </div>
 
+                            <div style="margin-bottom: 40px;">
+                                <?php if ($stockQty < 5): ?>
+                                    <p style="color: gray;">
+                                        Còn ít hàng (<?php echo $stockQty; ?> sp)
+                                        </pl>
+                                    <?php else: ?>
+                                    <p style="color: gray;">
+                                        Còn hàng
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+
+
+                            <!-- hidden fields -->
+                            <input type="hidden" name="name" value="<?php echo $product['Name'] ?>">
+                            <input type="hidden" name="size" value="<?php echo trim($product['Size'], ',') . ' cm'; ?>">
+                            <input type="hidden" name="img" value="<?php echo $product['Img'] ?>">
+                            <input type="hidden" name="promotionPrice"
+                                value="<?php echo $isDiscounted ? $finalPrice : $originalPrice; ?>">
+
+                            <!-- ROW 3: Button full width -->
+                            <button type="submit"
+                                style="width: 80%; padding: 12px 0; font-weight: bold;">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                Thêm vào giỏ
+                            </button>
+
                         <?php else: ?>
-                            <p style="color: #dc3545; font-weight: bold; margin-bottom: 15px; font-size: 18px;">
-                                <i class="fa-solid fa-circle-xmark"></i> Sản phẩm tạm hết hàng
+                            <p style="color: gray;">
+                                Hết hàng
                             </p>
 
-                            <button type="button" disabled style="background-color: #ccc; cursor: not-allowed; border: none; padding: 10px 20px; color: #666;">
+                            <button type="button"
+                                disabled
+                                style="width: 80%; background-color: #ccc; cursor: not-allowed; border: none; padding: 12px; color: #666;">
                                 Hết hàng
                             </button>
+
                         <?php endif; ?>
                     </div>
                 </form>

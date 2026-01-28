@@ -195,7 +195,7 @@ class ProductController extends BaseController
         if (in_array($ext, $allow_ext)) {
             $size = $file['size'] / 1024 / 1024;
             if ($size <= $size_allow) {
-                $upload = move_uploaded_file($file['tmp_name'], '../product_img/' . $new_file_name);
+                $upload = move_uploaded_file($file['tmp_name'], '../../product_img/'  . $new_file_name);
                 if ($upload) {
                     $status =  unlink('../product_img/' . $product['Img']);
                 }

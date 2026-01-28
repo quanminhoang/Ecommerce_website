@@ -6,7 +6,7 @@
                 <label for="file">
                     <div class="form-img">
                         <img id="blah" src="/Ecommerce_website/product_img/<?php echo trim($product['Img']); ?>" alt="Ảnh sản phẩm">
-                    </div>
+                    </div> 
                 </label>
                 <label for="file" class="input-file">Thay đổi ảnh đại diện</label>
                 <input type="file" id="file" style="display: none;" name="file" accept="image/*">
@@ -16,7 +16,7 @@
                     Giá
                     <b>(*)</b>
                 </label>
-                <input type="text" id="price" placeholder="Nhập giá sản phẩm" name="price" value="<?php echo $product['Price'] ?>">
+                <input type="text" id="price" placeholder="Nhập giá  sản phẩm" name="price" value="<?php echo $product['Price'] ?>">
             </div>
             <div class="form-group">
                 <label for="">

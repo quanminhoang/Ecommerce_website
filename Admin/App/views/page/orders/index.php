@@ -43,28 +43,30 @@
                         <td class="width-150">
                             <p class="btn-status 
                     <?php
-                    // Giữ class mặc định cho 3 trạng thái đầu
+                    // Giữ class cũ cho 3 trạng thái đầu
                     if ($order['StatusOrder'] == 1) echo 'btn-status--pending';
                     elseif ($order['StatusOrder'] == 2) echo 'btn-status--success';
                     elseif ($order['StatusOrder'] == 3) echo 'btn-status--close';
-                    ?>"
+                        ?>"
 
-                    style="
-                    <?php
-                    // Thêm màu riêng cho 2 trạng thái mới (ghi đè màu mặc định)
-                    if ($order['StatusOrder'] == 4) echo 'background-color: #3498db !important; color: #fff; border: none;'; // Xanh dương
-                    if ($order['StatusOrder'] == 5) echo 'background-color: #16a085 !important; color: #fff; border: none;'; // Xanh ngọc
-                    ?>">
+                        <?php
+                        // CHỈ IN RA THUỘC TÍNH STYLE KHI CẦN (Code này sẽ xóa bay cái vạch vàng)
+                        if ($order['StatusOrder'] == 4) {
+                                echo 'style="background-color: #3498db !important; color: #fff; border: none;"';
+                            } elseif ($order['StatusOrder'] == 5) {
+                                echo 'style="background-color: #16a085 !important; color: #fff; border: none;"';
+                            }
+                            ?>>
 
-                                <?php
-                                // Hiển thị chữ tương ứng
-                                if ($order['StatusOrder'] == 1) echo 'Đơn hàng mới';
-                                elseif ($order['StatusOrder'] == 2) echo 'Đã duyệt';
-                                elseif ($order['StatusOrder'] == 3) echo 'Đã hủy';
-                                elseif ($order['StatusOrder'] == 4) echo 'Đang giao hàng';
-                                elseif ($order['StatusOrder'] == 5) echo 'Giao thành công';
-                                ?>
-                            </p>
+                            <?php
+                                // Hiển thị chữ
+                            if ($order['StatusOrder'] == 1) echo 'Đơn hàng mới';
+                            elseif ($order['StatusOrder'] == 2) echo 'Đã duyệt';
+                            elseif ($order['StatusOrder'] == 3) echo 'Đã hủy';
+                            elseif ($order['StatusOrder'] == 4) echo 'Đang giao hàng';
+                            elseif ($order['StatusOrder'] == 5) echo 'Giao thành công';
+                            ?>
+                        </p>
                         </td>
                         <td class="width-200"><?php echo $order['Name'] ?></td>
                         <td class="width-200"><?php echo $order['NameReceive'] ?></td>

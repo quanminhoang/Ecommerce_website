@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 // Kiểm tra giỏ hàng có tồn tại không, nếu không thì đá về trang chủ
 if (!isset($_SESSION['cart']) || empty($_SESSION['cart'])) {
     echo '<script>alert("Giỏ hàng đang trống!"); window.location.href="/";</script>';

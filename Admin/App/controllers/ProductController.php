@@ -266,9 +266,9 @@ class ProductController extends BaseController
 
         if (count($data) > 0) {
             $this->productModel->updateProduct($id, $data);
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         } else {
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         }
     }
 

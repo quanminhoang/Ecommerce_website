@@ -24,7 +24,7 @@
 <body>
     <div class="wrapper">
         <div class="container">
-            <?php require_once "./App/views/page/${page}.php" ?>
+            <?php require_once "./App/views/page/{$page}.php" ?>
         </div>
     </div>
 

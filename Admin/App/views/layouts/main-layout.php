@@ -46,7 +46,7 @@
                     <!-- notification -->
                     <?php require_once './App/views/partials/notificationAction.php' ?>
                     <!-- Page -->
-                    <?php require_once "./App/views/page/${page}.php" ?>
+                    <?php require_once "./App/views/page/{$page}.php" ?>
                 </div>
             </main>
         </div>

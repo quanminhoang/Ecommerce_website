@@ -18,7 +18,7 @@ class OrderModel extends BaseModel
     {
         $sql = "SELECT orders.ID, orders.OrderDate, orders.NameReceive, orders.PhoneReceive, orders.AddressReceive, orders.AddressReceive, orders.Total, orders.StatusOrder, customers.Name FROM orders, customers 
         WHERE orders.CustomerID = customers.ID
-        AND customers.name like '%${name}%'
+        AND customers.name like '%{$name}%'
         ";
         return $this->querySql($sql);
     }
@@ -28,7 +28,7 @@ class OrderModel extends BaseModel
         $sql = "SELECT orderdetails.Quantity, orderdetails.Price, products.img, orderdetails.Size, products.Name
         FROM orderdetails, products 
         WHERE orderdetails.ProductID = products.ID 
-        AND orderdetails.OrderID = ${id}";
+        AND orderdetails.OrderID = {$id}";
         return $this->querySql($sql);
     }
 

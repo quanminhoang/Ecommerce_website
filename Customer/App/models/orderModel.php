@@ -11,13 +11,13 @@ class orderModel extends BaseModel
 
     public function getOrders($customerID)
     {
-        $sql = "SELECT * FROM orders WHERE orders.CustomerID = ${customerID}";
+        $sql = "SELECT * FROM orders WHERE orders.CustomerID = {$customerID}";
         return $this->querySql($sql);
     }
 
     public function getOrderbyCustomer($id)
     {
-        $sql = "SELECT orders.ID FROM orders, customers WHERE orders.CustomerID = customers.ID AND orders.CustomerID = ${id}";
+        $sql = "SELECT orders.ID FROM orders, customers WHERE orders.CustomerID = customers.ID AND orders.CustomerID = {$id}";
         return $this->querySql($sql);
     }
 

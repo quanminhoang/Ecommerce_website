@@ -21,7 +21,7 @@ class ProductModel extends BaseModel
 
     public function productByCate($cateID)
     {
-        $sql = "SELECT * FROM products WHERE products.CateID = ${cateID}";
+        $sql = "SELECT * FROM products WHERE products.CateID = {$cateID}";
         return $this->querySql($sql);
     }
 
@@ -33,7 +33,7 @@ class ProductModel extends BaseModel
 
     public function searchProduct($name)
     {
-        $sql = "SELECT * FROM products WHERE products.Name like '%${name}%' AND products.status = 1";
+        $sql = "SELECT * FROM products WHERE products.Name like '%{$name}%' AND products.status = 1";
         return  $this->querySql($sql);
     }
     public function minusStock($productId, $quantity)

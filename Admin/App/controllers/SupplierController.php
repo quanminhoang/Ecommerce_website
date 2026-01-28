@@ -110,14 +110,14 @@ class SupplierController extends BaseController
                 $data['Address'] = $address;
             }
         } else {
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         }
 
         if ((count($data) > 0)) {
             $this->supplierModel->updateSupplier($id, $data);
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         } else {
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         }
     }
 

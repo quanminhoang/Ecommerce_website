@@ -8,8 +8,7 @@ require './vendor/PHPMailer/src/Exception.php';
 require './vendor/PHPMailer/src/PHPMailer.php';
 require './vendor/PHPMailer/src/SMTP.php';
 
-class OrderController extends BaseController
-{
+class orderController extends BaseController {
     private $productModel;
     private $categoryModel;
     private $orderModel;
@@ -86,7 +85,7 @@ class OrderController extends BaseController
                 $_SESSION['cart'][] = $product;
             }
 
-            header("location:../../product/show/${id}");
+            header("location:../../product/show/{$id}");
         } else {
             header("location:../auth");
         }
@@ -189,10 +188,8 @@ class OrderController extends BaseController
             $size   = addslashes($value['Size']);
             $prodId = intval($value['ID']);
 
-            // ============================================================
-            // ĐÃ SỬA: THÊM DÒNG NÀY ĐỂ TRỪ KHO
+
             $this->productModel->minusStock($prodId, $qty);
-            // ============================================================
 
             $insertValues[] = "($qty, $price, '$size', $prodId, $order_id)";
         }

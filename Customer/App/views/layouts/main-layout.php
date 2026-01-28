@@ -22,7 +22,7 @@
 
         <!-- main -->
         <main class="main">
-            <?php require_once "./App/views/page/${page}.php" ?>
+            <?php require_once "./App/views/page/{$page}.php" ?>
         </main>
 
         <!-- footer -->

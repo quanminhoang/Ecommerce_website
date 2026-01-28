@@ -83,7 +83,7 @@ class CategoryController extends BaseController
 
         if (count($data) > 0) {
             $this->categoryModel->updateCategory($id, $data);
-            header("location:../edit/${id}");
+            header("location:../edit/{$id}");
         } else {
             header("location:edit/$id");
         }

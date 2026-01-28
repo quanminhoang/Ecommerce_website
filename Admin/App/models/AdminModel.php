@@ -5,7 +5,7 @@ class AdminModel extends BaseModel
 
     public function findEmail($email)
     {
-        $sql = "SELECT * FROM administrators WHERE Email = '${email}'";
+        $sql = "SELECT * FROM administrators WHERE Email = '{$email}'";
         $result =  $this->querySql($sql);
         return mysqli_fetch_array($result);
     }

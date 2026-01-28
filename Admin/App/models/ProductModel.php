@@ -31,19 +31,19 @@ class ProductModel extends BaseModel
 
     public function getProductsByCategory($CateID)
     {
-        $sql = "SELECT * FROM products WHERE products.CateID = ${CateID} AND products.status=1";
+        $sql = "SELECT * FROM products WHERE products.CateID = {$CateID} AND products.status=1";
         return $this->querySql($sql);
     }
 
     public function getProductsByBrand($BrandID)
     {
-        $sql = "SELECT * FROM products WHERE products.BrandID = ${BrandID} AND products.status=1";
+        $sql = "SELECT * FROM products WHERE products.BrandID = {$BrandID} AND products.status=1";
         return $this->querySql($sql);
     }
 
     public function getProductsBySupplier($SupplerID)
     {
-        $sql = "SELECT * FROM products WHERE products.SupplierID = ${SupplerID} AND products.status=1";
+        $sql = "SELECT * FROM products WHERE products.SupplierID = {$SupplerID} AND products.status=1";
         return $this->querySql($sql);
     }
 
@@ -60,7 +60,7 @@ class ProductModel extends BaseModel
         WHERE products.Status = 1 
         AND categories.status = 1 
         AND products.CateID = categories.ID
-        AND products.name like '%${name}%'";
+        AND products.name like '%{$name}%'";
         return $this->querySql($sql);
     }
 
@@ -73,7 +73,7 @@ class ProductModel extends BaseModel
     {
         $sql = "UPDATE products 
         SET products.Status = 0 
-        Where products.CateID =${CateID} 
+        Where products.CateID ={$CateID} 
         AND products.Status = 1";
         return $this->querySql($sql);
     }

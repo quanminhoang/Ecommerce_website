@@ -13,18 +13,18 @@ class BaseModel extends Database
         $columns = implode(', ', $select);
         $orderByString = implode(' ', $orderBy);
         if ($orderByString) {
-            $sql = "
-                SELECT ${columns} 
-                FROM ${tableName} 
-                where status = 1
-                ORDER BY ${orderByString}  LiMIT ${limit}
-                ";
+                $sql = "
+                    SELECT {$columns} 
+                    FROM {$tableName} 
+                    where status = 1
+                    ORDER BY {$orderByString}  LiMIT {$limit}
+                    ";
         } else {
-            $sql = "
-                SELECT ${columns} 
-                FROM ${tableName} 
-                where status = 1 LiMIT ${limit}
-            ";
+                $sql = "
+                    SELECT {$columns} 
+                    FROM {$tableName} 
+                    where status = 1 LiMIT {$limit}
+                ";
         }
 
         $query = $this->_query($sql);
@@ -38,7 +38,7 @@ class BaseModel extends Database
 
     public function find($tableName, $id)
     {
-        $sql = "SELECT * FROM ${tableName} Where id = ${id}";
+        $sql = "SELECT * FROM {$tableName} Where id = {$id}";
         $query = $this->_query($sql);
         return mysqli_fetch_assoc($query);
     }
@@ -53,8 +53,8 @@ class BaseModel extends Database
         $columns = implode(', ', array_keys($data));
         $newValue = implode(', ', $valueString);
         $sql = "
-            INSERT INTO ${tableName}(${columns}) 
-            VALUE(${newValue})
+            INSERT INTO {$tableName}({$columns}) 
+            VALUE({$newValue})
         ";
         $this->_query($sql);
     }
@@ -63,16 +63,16 @@ class BaseModel extends Database
     {
         $dataSet = [];
         foreach ($data as $key => $value) {
-            array_push($dataSet, "${key} = '${value}'");
+            array_push($dataSet, "{$key} = '{$value}'");
         }
         $dataSetString = implode(', ', $dataSet);
-        $sql = "UPDATE ${tableName} SET ${dataSetString} WHERE id = ${id}";
+        $sql = "UPDATE {$tableName} SET {$dataSetString} WHERE id = {$id}";
         $this->_query($sql);
     }
 
     public function destroy($tableName, $id)
     {
-        $sql = "UPDATE ${tableName} SET status = 0 WHERE id = ${id}";
+        $sql = "UPDATE {$tableName} SET status = 0 WHERE id = {$id}";
         $this->_query($sql);
     }
 

@@ -14,15 +14,15 @@ class BaseModel extends Database
         $orderByString = implode(' ', $orderBy);
         if ($orderByString) {
             $sql = "
-                SELECT ${columns} 
-                FROM ${tableName} 
+                SELECT {$columns} 
+                FROM {$tableName} 
                 where status = 1 
-                ORDER BY ${orderByString} 
+                ORDER BY {$orderByString} 
                 ";
         } else {
             $sql = "
-                SELECT ${columns} 
-                FROM ${tableName} 
+                SELECT {$columns} 
+                FROM {$tableName} 
                 where status = 1 
             ";
         }
@@ -37,7 +37,7 @@ class BaseModel extends Database
 
     public function find($tableName, $id)
     {
-        $sql = "SELECT * FROM ${tableName} Where ID = ${id}";
+        $sql = "SELECT * FROM {$tableName} Where ID = {$id}";
         $query = $this->_query($sql);
         return mysqli_fetch_assoc($query);
     }
@@ -45,9 +45,9 @@ class BaseModel extends Database
     public function searchName($tableName, $name)
     {
         $sql = "SELECT * 
-        FROM ${tableName}
-        WHERE ${tableName}.name like '%${name}%' 
-        AND ${tableName}.status = 1";
+        FROM {$tableName}
+        WHERE {$tableName}.name like '%{$name}%' 
+        AND {$tableName}.status = 1";
         $query = $this->_query($sql);
         return $query;
     }
@@ -69,8 +69,8 @@ class BaseModel extends Database
         $columns = implode(', ', array_keys($data));
         $newValue = implode(', ', $valueString);
         $sql = "
-            INSERT INTO ${tableName}(${columns}) 
-            VALUE(${newValue})
+            INSERT INTO {$tableName}({$columns}) 
+            VALUE({$newValue})
         ";
         $this->_query($sql);
     }
@@ -79,18 +79,18 @@ class BaseModel extends Database
     {
         $dataSet = [];
         foreach ($data as $key => $value) {
-            array_push($dataSet, "${key} = '${value}'");
+            array_push($dataSet, "{$key} = '{$value}'");
         }
         $dataSetString = implode(', ', $dataSet);
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $date = date('Y-m-d H:i:s');
-        $sql = "UPDATE ${tableName} SET ${dataSetString}, UpdateAt='${date}' WHERE id = ${id}";
+        $sql = "UPDATE {$tableName} SET {$dataSetString}, UpdateAt='{$date}' WHERE id = {$id}";
         $this->_query($sql);
     }
 
     public function destroy($tableName, $id)
     {
-        $sql = "UPDATE ${tableName} SET status = 0 WHERE id = ${id}";
+        $sql = "UPDATE {$tableName} SET status = 0 WHERE id = {$id}";
         $this->_query($sql);
     }
 

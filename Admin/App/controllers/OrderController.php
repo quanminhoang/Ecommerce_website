@@ -87,4 +87,20 @@ class OrderController extends BaseController
             ]
         );
     }
+    public function shippingShow($id)
+    {
+        $data = ['StatusOrder' => 4];
+        $this->orderModel->updateOrder($id, $data);
+        // Có thể gửi mail báo khách "Đơn hàng đang trên đường giao" tại đây nếu muốn
+        header("location:../show/${id}");
+    }
+
+    // 2. Chuyển sang trạng thái Hoàn tất/Đã giao (Status = 5)
+    public function completedShow($id)
+    {
+        $data = ['StatusOrder' => 5];
+        $this->orderModel->updateOrder($id, $data);
+        // Có thể gửi mail "Cảm ơn đã mua hàng" tại đây
+        header("location:../show/${id}");
+    }
 }

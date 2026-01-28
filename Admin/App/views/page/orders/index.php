@@ -42,16 +42,27 @@
                         </td>
                         <td class="width-150">
                             <p class="btn-status 
-                            <?php
-                            echo $status = $order['StatusOrder'] == 1 ? 'btn-status--pending' : '';
-                            echo $status = $order['StatusOrder'] == 2 ? 'btn-status--success' : '';
-                            echo $status = $order['StatusOrder'] == 3 ? 'btn-status--close' : '';
-                            ?>
-                            ">
+                    <?php
+                    // Giữ class mặc định cho 3 trạng thái đầu
+                    if ($order['StatusOrder'] == 1) echo 'btn-status--pending';
+                    elseif ($order['StatusOrder'] == 2) echo 'btn-status--success';
+                    elseif ($order['StatusOrder'] == 3) echo 'btn-status--close';
+                    ?>"
+
+                    style="
+                    <?php
+                    // Thêm màu riêng cho 2 trạng thái mới (ghi đè màu mặc định)
+                    if ($order['StatusOrder'] == 4) echo 'background-color: #3498db !important; color: #fff; border: none;'; // Xanh dương
+                    if ($order['StatusOrder'] == 5) echo 'background-color: #16a085 !important; color: #fff; border: none;'; // Xanh ngọc
+                    ?>">
+
                                 <?php
-                                echo $status = $order['StatusOrder'] == 1 ? 'Đơn hàng mới' : '';
-                                echo $status = $order['StatusOrder'] == 2 ? 'Đã duyệt' : '';
-                                echo $status = $order['StatusOrder'] == 3 ? 'Đã hủy' : '';
+                                // Hiển thị chữ tương ứng
+                                if ($order['StatusOrder'] == 1) echo 'Đơn hàng mới';
+                                elseif ($order['StatusOrder'] == 2) echo 'Đã duyệt';
+                                elseif ($order['StatusOrder'] == 3) echo 'Đã hủy';
+                                elseif ($order['StatusOrder'] == 4) echo 'Đang giao hàng';
+                                elseif ($order['StatusOrder'] == 5) echo 'Giao thành công';
                                 ?>
                             </p>
                         </td>

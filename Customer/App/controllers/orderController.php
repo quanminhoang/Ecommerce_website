@@ -294,8 +294,8 @@ class OrderController extends BaseController
                 $mail->isSMTP();
                 $mail->Host = 'smtp.gmail.com';
                 $mail->SMTPAuth = true;
-                $mail->Username = 'kongtu2x@gmail.com';
-                $mail->Password = 'dangioexefxpiced'; // App password
+                $mail->Username = 'phatlu678@gmail.com';
+                $mail->Password = 'hbht kgyc erkd tlar'; // App password
                 $mail->Port = 465;
                 $mail->SMTPSecure = 'ssl';
 

@@ -25,7 +25,7 @@ class OrderModel extends BaseModel
 
     public function getOrderDetails($id)
     {
-        $sql = "SELECT orderdetails.Quantity, orderdetails.Price, orderdetails.Size, products.Name
+        $sql = "SELECT orderdetails.Quantity, orderdetails.Price, products.img, orderdetails.Size, products.Name
         FROM orderdetails, products 
         WHERE orderdetails.ProductID = products.ID 
         AND orderdetails.OrderID = ${id}";

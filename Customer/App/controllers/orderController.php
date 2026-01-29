@@ -8,7 +8,8 @@ require './vendor/PHPMailer/src/Exception.php';
 require './vendor/PHPMailer/src/PHPMailer.php';
 require './vendor/PHPMailer/src/SMTP.php';
 
-class orderController extends BaseController {
+class orderController extends BaseController
+{
     private $productModel;
     private $categoryModel;
     private $orderModel;
@@ -49,7 +50,6 @@ class orderController extends BaseController {
             ]
         );
     }
-
     public function addToCart($id)
     {
         if (isset($_SESSION['customer'])) {
@@ -57,38 +57,74 @@ class orderController extends BaseController {
                 $_SESSION['cart'] = [];
             }
 
+            // Lấy thông tin sản phẩm từ DB để check tồn kho thực tế
+            $productDB = $this->productModel->getProduct($id);
+            $stockReal = (int)$productDB['Quantity']; // Biến Quantity từ DB chính là tồn kho
+
             $name = $_POST['name'];
             $promotionPrice = $_POST['promotionPrice'];
             $size = $_POST['size'];
             $img = $_POST['img'];
-            $quantity = $_POST['quantity'];
+            $quantityBuy = (int)$_POST['quantity'];
             $flag = 0;
 
-            for ($i = 0; $i < sizeof($_SESSION['cart']); $i++) {
-                if ($_SESSION['cart'][$i]['ID'] == $id && $_SESSION['cart'][$i]['Size'] == $size) {
+            foreach ($_SESSION['cart'] as $key => $item) {
+                // Check trùng ID và trùng Size
+                if ($item['ID'] == $id && $item['Size'] == $size) {
                     $flag = 1;
-                    $quantityNew = $quantity + $_SESSION['cart'][$i]['Quantity'];
-                    $_SESSION['cart'][$i]['Quantity'] = $quantityNew;
+                    $newQty = $item['Quantity'] + $quantityBuy;
+
+                    // Nếu tổng mua > tồn kho thì chặn lại ở mức max
+                    if ($newQty > $stockReal) {
+                        $newQty = $stockReal;
+                    }
+
+                    $_SESSION['cart'][$key]['Quantity'] = $newQty;
+                    // Cập nhật luôn Stock mới nhất từ DB vào session cho chắc
+                    $_SESSION['cart'][$key]['Stock'] = $stockReal;
                     break;
                 }
             }
 
             if ($flag == 0) {
-                $product = [
+                if ($quantityBuy > $stockReal) $quantityBuy = $stockReal;
+
+                $productSession = [
                     'ID' => $id,
                     'Name' => $name,
                     'PromotionPrice' => $promotionPrice,
                     'Size' => $size,
                     'Img' => $img,
-                    'Quantity' => $quantity
+                    'Quantity' => $quantityBuy,
+                    'Stock' => $stockReal // Lưu biến này để Cart.php sử dụng
                 ];
-                $_SESSION['cart'][] = $product;
+                $_SESSION['cart'][] = $productSession;
             }
 
             header("location:../../product/show/{$id}");
         } else {
             header("location:../auth");
         }
+    }
+
+    public function updateQuantity($id, $type)
+    {
+        // Lưu ý: $id ở đây là key của mảng trong Session
+        if (isset($_SESSION['cart'][$id])) {
+            $current = $_SESSION['cart'][$id]['Quantity'];
+            $stock = $_SESSION['cart'][$id]['Stock'];
+
+            if ($type == 'plus') {
+                if ($current < $stock) {
+                    $_SESSION['cart'][$id]['Quantity']++;
+                }
+            } elseif ($type == 'minus') {
+                if ($current > 1) {
+                    $_SESSION['cart'][$id]['Quantity']--;
+                }
+            }
+        }
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
     }
 
     public function deleteCart($id)

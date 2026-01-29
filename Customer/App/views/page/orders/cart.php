@@ -2,82 +2,106 @@
     <div class="container">
         <div class="cart__container">
             <div class="cart__title">
-                <h1>Thông tin giỏ hàng</h1>
+                <h1>Giỏ hàng</h1>
             </div>
-            <div class="cart__table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th lass="w-10">Size</th>
-                            <th lass="w-10">Đơn giá</th>
-                            <th class="w-10">Số lượng</th>
-                            <th lass="w-10">Thành tiền</th>
-                            <th class="w-30">Xóa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $total = 0;
-                        // Biến kiểm tra giỏ hàng có trống không
-                        $hasCart = false; 
 
-                        if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
-                            $hasCart = true; // Đánh dấu là có hàng
+            <?php
+            $total = 0;
+            $hasCart = false;
+            if (isset($_SESSION['cart']) && is_array($_SESSION['cart']) && count($_SESSION['cart']) > 0) {
+                $hasCart = true;
+            }
+            ?>
+
+            <?php if ($hasCart): ?>
+                <div class="cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="w-5 text-center"></th>
+                                <th class="w-30 text-left">Sản phẩm</th>
+                                <th class="w-10 text-center">Size</th>
+                                <th class="w-15 text-center">Đơn giá</th>
+                                <th class="w-10 text-center">Số lượng</th>
+                                <th class="w-15 text-right">Thành tiền</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
                             foreach ($_SESSION['cart'] as $key => $value) {
-                                $priceToUse = $value['PromotionPrice'] > 0 ? $value['PromotionPrice'] : $value['Price'];
-                                $total += $priceToUse * $value['Quantity'];
-                        ?>
+                                $priceToUse = ($value['PromotionPrice'] > 0) ? $value['PromotionPrice'] : $value['Price'];
+                                $subtotal = $priceToUse * $value['Quantity'];
+                                $total += $subtotal;
+                            ?>
                                 <tr>
-                                    <td>
+
+                                    <td class="w-5 text-left">
                                         <div class="img">
-                                            <img src="../product_img/<?php echo $value['Img'] ?>" alt="">
+                                            <img src="../product_img/<?php echo $value['Img'] ?>"
+                                                onerror="this.onerror=null;this.src='public/img/image.png';"
+                                                alt="Product">
                                         </div>
-                                        <p><?php echo $value['Name'] ?></p>
                                     </td>
-                                    <td class="w-10 text-right">
-                                        <?php echo $value['Size']; ?>
+                                    <td class="w-30 text-left"><?php echo $value['Name']; ?></td>
+                                    <td class="w-10 text-center"><?php echo $value['Size']; ?></td>
+                                    <td class="w-15 text-center"><?php echo number_format($priceToUse, 0, '.', '.'); ?> VNĐ</td>
+                                    <td class="w-10 text-left">
+                                        <div class="qty-box">
+                                            <a href="order/updateQuantity/<?php echo $key; ?>/minus"
+                                                class="qty-action <?php echo ($value['Quantity'] <= 1) ? 'disabled' : ''; ?>">&minus;</a>
+
+                                            <span class="qty-count"><?php echo $value['Quantity']; ?></span>
+
+                                            <?php if ($value['Quantity'] < $value['Stock']): ?>
+                                                <a href="order/updateQuantity/<?php echo $key; ?>/plus" class="qty-action">+</a>
+                                            <?php else: ?>
+                                                <span class="qty-action disabled" title="Đã đạt giới hạn tồn kho" style="color: #ccc; cursor: not-allowed;">+</span>
+                                            <?php endif; ?>
+                                        </div>
                                     </td>
-                                    <td class="w-10 text-right">
-                                        <?php echo number_format($value['PromotionPrice'], 0, '.', '.');  ?>
-                                    </td>
-                                    <td class="w-10 text-center">
-                                        <?php echo $value['Quantity']; ?>
-                                    </td>
-                                    <td class="w-10 text-right"><?php echo
-                                                                number_format($value['PromotionPrice'] * $value['Quantity'], 0, ',', ',');
-                                                                ?></td>
-                                    <td class="w-30 text-center">
-                                        <a href="order/deleteCart/<?php echo $key; ?>">
-                                            <i class="fa-solid fa-xmark"></i>
+                                    <td class="w-15 price-column text-center">
+                                        <a href="order/deleteCart/<?php echo $key; ?>" class="cart-remove-btn" onclick="return confirm('Xóa sản phẩm này?')">
+                                            <i class="fa-regular fa-xmark"></i>
                                         </a>
+
+                                        <span class="subtotal-amount">
+                                            <?php echo number_format($subtotal, 0, '.', '.') . ' VNĐ'; ?>
+                                        </span>
                                     </td>
                                 </tr>
-                        <?php }
-                        } else {
-                            // Hiển thị thông báo nếu giỏ hàng trống (Tuỳ chọn)
-                            echo '<tr><td colspan="6" style="text-align:center; padding: 20px;">Giỏ hàng của bạn đang trống!</td></tr>';
-                        } ?>
-                    </tbody>
-                </table>
-                
-                <div class="table__bottom">
-                    <div class="table__total">
-                        <p>Tổng giá sản phẩm</p>
-                        <p><?php echo number_format($total, 0, '.', '.');  ?></p>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+
+                    <div class="table__bottom">
+                        <div class="table__total">
+                            <p>Tổng giá sản phẩm</p>
+                            <p><?php echo number_format($total, 0, '.', '.'); ?> VNĐ</p>
+                        </div>
+                        <form class="table__pay" action="order/pay" method="POST">
+                            <input type="hidden" name="total" value="<?php echo $total; ?>">
+                            <button type="submit" style="cursor: pointer;">Tiến hành thanh toán</button>
+                        </form>
                     </div>
-                    <form class="table__pay" action="order/pay" method="POST">
-                        <input type="hidden" name="total" value="<?php echo $total; ?>">
-                        
-                        <?php if ($hasCart): ?>
-                            <button type="submit" style="cursor: pointer; opacity: 1;">Tiến hành thanh toán</button>
-                        <?php else: ?>
-                            <button type="button" disabled style="cursor: not-allowed; opacity: 0.5; background-color: #ccc;">Tiến hành thanh toán</button>
-                        <?php endif; ?>
-                        
-                    </form>
                 </div>
-            </div>
+
+            <?php else: ?>
+                <div class="cart__empty" style="text-align: left; padding: 40px 0;">
+                    <p style="font-size: 1rem; color: #666; margin-bottom: 30px;">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+
+                    <div class="cart__table">
+                        <div class="table__bottom" style="margin: 0 auto !important; float: none !important; border-top: none;">
+                            <div class="table__pay">
+                                <a href="index.php" style="text-decoration: none;">
+                                    <button type="button" style="cursor: pointer; width: 250px;">Tiếp tục mua sắm</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
     </div>
 </div>

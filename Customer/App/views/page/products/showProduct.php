@@ -89,7 +89,7 @@
                                     style="width: 80px; padding: 6px;">
                             </div>
 
-                            <div style="margin-bottom: 40px;">
+                            <div style="margin-bottom: 30px;">
                                 <?php if ($stockQty < 5): ?>
                                     <p style="color: gray;">
                                         Còn ít hàng (<?php echo $stockQty; ?> sp)

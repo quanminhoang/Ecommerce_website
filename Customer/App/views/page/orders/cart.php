@@ -87,7 +87,7 @@
                 </div>
 
             <?php else: ?>
-                <div class="cart__empty" style="text-align: left; padding: 40px 0;">
+                <div class="cart__empty" style="text-align: center; padding: 40px 0;">
                     <p style="font-size: 1rem; color: #666; margin-bottom: 30px;">Không có sản phẩm nào trong giỏ hàng của bạn.</p>
 
                     <div class="cart__table">

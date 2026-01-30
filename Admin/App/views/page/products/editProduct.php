@@ -8,7 +8,7 @@
                         <img id="blah" src="/Ecommerce_website/product_img/<?php echo trim($product['Img']); ?>" alt="Ảnh sản phẩm">
                     </div> 
                 </label>
-                <label for="file" class="input-file">Thay đổi ảnh đại diện</label>
+                <label for="file" class="input-file">Thay đổi ảnh</label>
                 <input type="file" id="file" style="display: none;" name="file" accept="image/*">
             </div>
             <div class="form-group">

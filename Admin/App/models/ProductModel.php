@@ -60,7 +60,7 @@ class ProductModel extends BaseModel
         WHERE products.Status = 1 
         AND categories.status = 1 
         AND products.CateID = categories.ID
-        AND products.name like '%{$name}%'";
+        AND products.name like '%${name}%'";
         return $this->querySql($sql);
     }
 

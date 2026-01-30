@@ -52,7 +52,7 @@ class ProductController extends BaseController
             ? floatval($_POST['promotionPrice'])
             : $price;
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : 0;
-        
+
         // --- MỚI THÊM: Lấy số lượng từ form ---
         $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
         // -------------------------------------
@@ -82,7 +82,7 @@ class ProductController extends BaseController
             && $cateID && $supplierID && $brandID
         ) {
             //Check type file
-            $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg'];
+            $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
             if (in_array($ext, $allow_ext)) {
                 $size = $file['size'] / 1024 / 1024;
                 if ($size <= $size_allow) {
@@ -161,9 +161,9 @@ class ProductController extends BaseController
         $product = $this->productModel->getProduct($id);
         $name = $_POST['name'];
         $price = isset($_POST['price']) && $_POST['price'] !== '' ? floatval($_POST['price']) : $product['Price'];
-        $promotionPrice = isset($_POST['promotionPrice']) && $_POST['promotionPrice'] !== '' 
-                  ? floatval($_POST['promotionPrice']) 
-                  : $price; // Nếu trống, dùng giá gốc
+        $promotionPrice = isset($_POST['promotionPrice']) && $_POST['promotionPrice'] !== ''
+            ? floatval($_POST['promotionPrice'])
+            : $price; // Nếu trống, dùng giá gốc
 
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : $product['Discount'];
 
@@ -191,19 +191,21 @@ class ProductController extends BaseController
         $new_file_name = md5(uniqid()) . '.' . $ext;
 
         //Check type file
-        $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg'];
-        if (in_array($ext, $allow_ext)) {
-            $size = $file['size'] / 1024 / 1024;
-            if ($size <= $size_allow) {
-                $upload = move_uploaded_file($file['tmp_name'], '../../product_img/'  . $new_file_name);
-                if ($upload) {
-                    $status =  unlink('../product_img/' . $product['Img']);
+        $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
+        if ($file && $file['name']) {
+            $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
+            if (in_array(strtolower($ext), $allow_ext)) { // Thêm strtolower để an toàn
+                $size = $file['size'] / 1024 / 1024;
+                if ($size <= $size_allow) {
+                    // SỬA ĐƯỜNG DẪN TẠI ĐÂY: Bỏ bớt một dấu ../
+                    $upload = move_uploaded_file($file['tmp_name'], '../product_img/'  . $new_file_name);
+                    if ($upload) {
+                        // SỬA ĐƯỜNG DẪN XÓA ẢNH TẠI ĐÂY
+                        if (file_exists('../product_img/' . $product['Img'])) {
+                            unlink('../product_img/' . $product['Img']);
+                        }
+                    }
                 }
-                if (!$upload) {
-                    $error[] = 'error upload';
-                }
-            } else {
-                $error = 'size_error';
             }
         } else {
             $error[] = 'ext_error';

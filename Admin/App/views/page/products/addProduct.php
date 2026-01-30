@@ -16,19 +16,19 @@
                     Giá
                     <b>(*)</b>
                 </label>
-                <input type="text" placeholder="Nhập giá sản phẩm" name="price">
+                <input type="text" id="price" placeholder="Nhập giá sản phẩm" name="price">
             </div>
             <div class="form-group">
                 <label for="">
                     Giá Khuyến mãi
                 </label>
-                <input type="text" placeholder="Nhập giá khuyến mãi" name="promotionPrice">
+                <input type="text" id="promotionPrice" placeholder="Nhập giá khuyến mãi" name="promotionPrice">
             </div>
             <div class="form-group">
                 <label for="">
                     Giảm (%)
                 </label>
-                <input type="text" placeholder="Nhập % giảm giá" name="discount">
+                <input type="text" id="discount" placeholder="Nhập % giảm giá" name="discount">
             </div>
             
             <div class="form-group">
@@ -148,4 +148,39 @@
     ClassicEditor.create(document.querySelector('#ckeditor1')).catch((error) => {
         console.error(error);
     });
+
+
+const priceInput = document.getElementById('price');
+const discountInput = document.getElementById('discount');
+const promotionPriceInput = document.getElementById('promotionPrice');
+
+const calculatePrice = () => {
+    let priceRaw = priceInput.value.replace(/\./g, '');
+    let price = parseFloat(priceRaw) || 0;
+    let discount = parseFloat(discountInput.value) || 0;
+
+    // Giới hạn % từ 0 - 100
+    if (discount > 100) {
+        discount = 100;
+        discountInput.value = 100;
+    }
+    if (discount < 0) {
+        discount = 0;
+        discountInput.value = 0;
+    }
+
+    if (price > 0) {
+        let finalPrice = price - (price * (discount / 100));
+        promotionPriceInput.value = Math.round(finalPrice);
+    } else {
+        promotionPriceInput.value = 0;
+    }
+}
+
+if (priceInput && discountInput) {
+    priceInput.addEventListener('input', calculatePrice);
+    discountInput.addEventListener('input', calculatePrice);
+}
+
 </script>
+

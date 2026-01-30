@@ -21,9 +21,9 @@
                     <?php echo $product['Name'] ?>
                 </h1>
                 <?php
-  
+
                 $originalPrice = (float)$product['Price'];
-                $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0; 
+                $discount = isset($product['Discount']) ? (float)$product['Discount'] : 0;
 
                 // Tính giá sau giảm
                 if ($discount > 0) {
@@ -50,6 +50,7 @@
                             -<?php echo $discount; ?>%
                         </span>
 
+
                     <?php else: ?>
                         <span style="color: #d70018; font-weight: bold; font-size: 24px; text-decoration: none !important;">
                             <?php echo number_format($originalPrice, 0, '.', '.'); ?> đ
@@ -60,6 +61,8 @@
                 <div class="content__desc">
                     <h5>Mô tả :</h5>
                     <?php echo $product['Description'] ?>
+                    <label>Kích thước (cm):</label>
+                    <label><strong><?php echo trim($product['Size'], ','); ?></strong></label>
                 </div>
 
                 <?php
@@ -70,10 +73,6 @@
                 <form class="content__bottom" action="order/addToCart/<?php echo $product['ID'] ?>" method="POST">
 
                     <div style="margin-bottom: 15px;">
-                        <div style="display: flex; align-items: center; gap: 5px; font-size: 16px;">
-                            <label>Kích thước (cm):</label>
-                            <label><strong><?php echo trim($product['Size'], ','); ?></strong></label>
-                        </div>
                     </div>
 
                     <div class="stock-control" style="display: block;">

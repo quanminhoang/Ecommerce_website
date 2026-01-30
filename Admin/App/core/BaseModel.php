@@ -79,12 +79,17 @@ class BaseModel extends Database
     {
         $dataSet = [];
         foreach ($data as $key => $value) {
-            array_push($dataSet, "{$key} = '{$value}'");
+            $safeValue = mysqli_real_escape_string($this->connect, $value);
+            array_push($dataSet, "{$key} = '{$safeValue}'");
         }
+
         $dataSetString = implode(', ', $dataSet);
+
         date_default_timezone_set('Asia/Ho_Chi_Minh');
-        $date = date('Y-m-d H:i:s');
-        $sql = "UPDATE {$tableName} SET {$dataSetString}, UpdateAt='{$date}' WHERE id = {$id}";
+        $dateString = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE {$tableName} SET {$dataSetString}, UpdateAt = '{$dateString}' WHERE id = '{$id}'";
+
         $this->_query($sql);
     }
 

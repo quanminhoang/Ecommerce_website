@@ -27,7 +27,7 @@ class ProductModel extends BaseModel
 
     public function getProductDiscount()
     {
-        $sql = "SELECT * FROM products WHERE products.Discount != 0 limit 8";
+        $sql = "SELECT * FROM products WHERE products.Discount != 0 AND products.status = 1 limit 8";
         return $this->querySql($sql);
     }
 
@@ -45,7 +45,7 @@ class ProductModel extends BaseModel
         $sql = "UPDATE products 
                 SET Quantity = Quantity - $quantity 
                 WHERE ID = $productId";
-        
+
         return $this->querySql($sql);
     }
 }

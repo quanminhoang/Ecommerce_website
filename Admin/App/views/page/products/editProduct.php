@@ -1,5 +1,21 @@
-<form action="product/update/<?php echo $product['ID'] ?>" class="form-wrapper" method="POST" enctype="multipart/form-data">
+<?php
+$form_errors = isset($form_errors) ? $form_errors : [];
+$old = isset($form_old) && is_array($form_old) ? $form_old : null;
+$p = $old !== null ? array_merge($product, $old) : $product;
+$esc = function($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); };
+?>
+<form action="product/update/<?php echo $esc($product['ID']); ?>" class="form-wrapper" method="POST" enctype="multipart/form-data">
     <h1 class="form-title">Cập nhật sản phẩm</h1>
+    <?php if (!empty($form_errors)): ?>
+    <div class="form-errors" style="background:#fee;border:1px solid #c00;border-radius:6px;padding:10px 14px;margin-bottom:16px;">
+        <strong>Vui lòng sửa các lỗi sau:</strong>
+        <ul style="margin:8px 0 0 0;padding-left:20px;">
+            <?php foreach ($form_errors as $err): ?>
+            <li><?php echo $esc($err); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php endif; ?>
     <div class="form">
         <div class="form-left">
             <div class="form-group">
@@ -16,18 +32,18 @@
                     Giá
                     <b>(*)</b>
                 </label>
-                <input type="text" id="price" placeholder="Nhập giá  sản phẩm" name="price" value="<?php echo $product['Price'] ?>">
+                <input type="text" id="price" placeholder="Nhập giá  sản phẩm" name="price" value="<?php echo $esc($p['price'] ?? $p['Price']); ?>">
             </div>
             <div class="form-group">
                 <label for="">
                     Giá Khuyến mãi
                     <b>(*)</b>
                 </label>
-                <input type="text" id="promotionPrice" placeholder="Nhập giá khuyến mãi" name="promotionPrice" value="<?php echo trim($product['PromotionPrice']); ?>">
+                <input type="text" id="promotionPrice" placeholder="Nhập giá khuyến mãi" name="promotionPrice" value="<?php echo $esc($p['promotionPrice'] ?? $p['PromotionPrice']); ?>">
             </div>
             <div class="form-group">
                 <label for="">Giảm (%)</label>
-                <input type="text" id="discount" placeholder="Nhập % giảm giá" name="discount" value="<?php echo trim($product['Discount']); ?>">
+                <input type="text" id="discount" placeholder="Nhập % giảm giá" name="discount" value="<?php echo $esc($p['discount'] ?? $p['Discount']); ?>">
             </div>
 
             <div class="form-group">
@@ -36,7 +52,7 @@
                     <b>(*)</b>
                 </label>
                 <input type="number" min="0" placeholder="Nhập số lượng hàng" name="quantity" 
-                       value="<?php echo isset($product['Quantity']) ? $product['Quantity'] : 0; ?>">
+                       value="<?php echo $esc(isset($p['quantity']) ? $p['quantity'] : (isset($p['Quantity']) ? $p['Quantity'] : 0)); ?>">
             </div>
         </div>
         <div class="form-right">
@@ -53,7 +69,7 @@
                         Size
                         <b>(*)</b>
                     </label>
-                    <input type="text" placeholder="Nhập Size sản phẩm" name="size" value="<?php echo $product['Size'] ?>">
+                    <input type="text" placeholder="Nhập Size sản phẩm" name="size" value="<?php echo $esc($p['size'] ?? $p['Size']); ?>">
                 </div>
             </div>
             <div class="form-container">
@@ -63,9 +79,12 @@
                         <b>(*)</b>
                     </label>
                     <select name="categoryID">
-                        <option selected disabled value=" ">-- Chọn --</option>
-                        <?php foreach ($categories as $category) { ?>
-                            <option <?php echo $selected = $category['ID'] == $product['CateID'] ? "selected" : "" ?> value="<?php echo $category['ID'] ?>"><?php echo $category['Name'] ?></option>
+                        <?php $catVal = isset($p['categoryID']) ? (string)$p['categoryID'] : (isset($p['CateID']) ? (string)$p['CateID'] : ''); $noCat = ($catVal === '' || $catVal === ' '); ?>
+                        <option<?php echo $noCat ? ' selected' : ''; ?> disabled value=" ">-- Chọn --</option>
+                        <?php foreach ($categories as $category) {
+                            $sel = ($catVal !== '' && $catVal !== ' ' && $catVal === (string)$category['ID']) ? ' selected' : '';
+                        ?>
+                            <option<?php echo $sel; ?> value="<?php echo $esc($category['ID']); ?>"><?php echo $esc($category['Name']); ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -75,9 +94,12 @@
                         <b>(*)</b>
                     </label>
                     <select name="supplierID">
-                        <option selected disabled value=" ">-- Chọn --</option>
-                        <?php foreach ($suppliers as $supplier) { ?>
-                            <option <?php echo $selected = $supplier['ID'] == $product['SupplierID'] ? "selected" : "" ?> value="<?php echo $supplier['ID'] ?>"><?php echo $supplier['Name'] ?></option>
+                        <?php $supVal = isset($p['supplierID']) ? (string)$p['supplierID'] : (isset($p['SupplierID']) ? (string)$p['SupplierID'] : ''); $noSup = ($supVal === '' || $supVal === ' '); ?>
+                        <option<?php echo $noSup ? ' selected' : ''; ?> disabled value=" ">-- Chọn --</option>
+                        <?php foreach ($suppliers as $supplier) {
+                            $sel = ($supVal !== '' && $supVal !== ' ' && $supVal === (string)$supplier['ID']) ? ' selected' : '';
+                        ?>
+                            <option<?php echo $sel; ?> value="<?php echo $esc($supplier['ID']); ?>"><?php echo $esc($supplier['Name']); ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -89,9 +111,12 @@
                         <b>(*)</b>
                     </label>
                     <select name="brandID">
-                        <option selected disabled value=" ">-- Chọn --</option>
-                        <?php foreach ($brands as $brand) { ?>
-                            <option <?php echo $selected = $brand['ID'] == $product['BrandID'] ? "selected" : "" ?> value="<?php echo $brand['ID'] ?>"><?php echo $brand['Name'] ?></option>
+                        <?php $brandVal = isset($p['brandID']) ? (string)$p['brandID'] : (isset($p['BrandID']) ? (string)$p['BrandID'] : ''); $noBrand = ($brandVal === '' || $brandVal === ' '); ?>
+                        <option<?php echo $noBrand ? ' selected' : ''; ?> disabled value=" ">-- Chọn --</option>
+                        <?php foreach ($brands as $brand) {
+                            $sel = ($brandVal !== '' && $brandVal !== ' ' && $brandVal === (string)$brand['ID']) ? ' selected' : '';
+                        ?>
+                            <option<?php echo $sel; ?> value="<?php echo $esc($brand['ID']); ?>"><?php echo $esc($brand['Name']); ?></option>
                         <?php } ?>
                     </select>
                 </div>
@@ -101,8 +126,9 @@
                         <b>(*)</b>
                     </label>
                     <select name="hot">
-                        <option <?php echo $selected = $product['Hot'] == 1 ? "selected" : "" ?> value="1">Có</option>
-                        <option <?php echo $selected = $product['Hot'] == 0 ? "selected" : "" ?> value="0">Không</option>
+                        <?php $hotVal = isset($p['hot']) ? (string)$p['hot'] : (isset($p['Hot']) ? (string)$p['Hot'] : '0'); ?>
+                        <option<?php echo $hotVal === '1' ? ' selected' : ''; ?> value="1">Có</option>
+                        <option<?php echo $hotVal === '0' ? ' selected' : ''; ?> value="0">Không</option>
                     </select>
                 </div>
             </div>
@@ -111,14 +137,14 @@
                     Mô tả
                     <b>(*)</b>
                 </label>
-                <textarea name='description' placeholder="Nhập mô tả sản phẩm" id='ckeditor'><?php echo $product['Description'] ?></textarea>
+                <textarea name='description' placeholder="Nhập mô tả sản phẩm" id='ckeditor'><?php echo $esc($p['description'] ?? $p['Description'] ?? ''); ?></textarea>
             </div>
             <div class="form-group">
                 <label for="">
                     Thông tin chi tiết
                     <b>(*)</b>
                 </label>
-                <textarea name='detail' placeholder="Nhập mô tả sản phẩm" id='ckeditor1'><?php echo $product['Detail'] ?></textarea>
+                <textarea name='detail' placeholder="Nhập thông tin chi tiết / Dung thành phần" id='ckeditor1'><?php echo $esc($p['detail'] ?? $p['Detail'] ?? ''); ?></textarea>
             </div>
         </div>
     </div>

@@ -32,6 +32,9 @@ class ProductController extends BaseController
         $categories = $this->categoryModel->getCategories();
         $brands = $this->brandModel->getBrands();
         $suppliers = $this->supplierModel->getSuppliers();
+        $form_errors = $_SESSION['product_form_errors'] ?? [];
+        $form_old = $_SESSION['product_form_old'] ?? null;
+        unset($_SESSION['product_form_errors'], $_SESSION['product_form_old']);
         $this->view(
             'main-layout',
             [
@@ -40,83 +43,119 @@ class ProductController extends BaseController
                 'categories' => $categories,
                 'brands' => $brands,
                 'suppliers' => $suppliers,
+                'form_errors' => $form_errors,
+                'form_old' => $form_old,
             ]
         );
     }
 
     function create()
     {
-        $name = $_POST['name'];
+        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
         $price = isset($_POST['price']) && $_POST['price'] !== '' ? floatval($_POST['price']) : 0;
         $promotionPrice = isset($_POST['promotionPrice']) && $_POST['promotionPrice'] !== ''
             ? floatval($_POST['promotionPrice'])
             : $price;
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : 0;
-
-        // --- MỚI THÊM: Lấy số lượng từ form ---
         $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 0;
-        // -------------------------------------
+        $sizeProduct = isset($_POST['size']) ? trim($_POST['size']) : '';
+        $hot = isset($_POST['hot']) ? $_POST['hot'] : '0';
+        $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+        $detail = isset($_POST['detail']) ? trim($_POST['detail']) : '';
+        $file = $_FILES['file'] ?? null;
+        $cateID = isset($_POST['categoryID']) ? trim($_POST['categoryID']) : '';
+        $supplierID = isset($_POST['supplierID']) ? trim($_POST['supplierID']) : '';
+        $brandID = isset($_POST['brandID']) ? trim($_POST['brandID']) : '';
 
-        $sizeProduct = $_POST['size'];
-        $hot = $_POST['hot'];
-        $description = $_POST['description'];
-        $detail = $_POST['detail'];
-        $file = $_FILES['file'];
-        $cateID = $_POST['categoryID'];
-        $supplierID = $_POST['supplierID'];
-        $brandID = $_POST['brandID'];
+        $errors = [];
+        if ($name === '') $errors[] = 'Vui lòng nhập Tên sản phẩm.';
+        if ($price <= 0) $errors[] = 'Vui lòng nhập Giá hợp lệ.';
+        if ($sizeProduct === '') $errors[] = 'Vui lòng nhập Size.';
+        if ($description === '') $errors[] = 'Vui lòng nhập Mô tả.';
+        if ($detail === '') $errors[] = 'Vui lòng nhập Thông tin chi tiết (Dung thành phần).';
+        if (!$file || empty($file['name'])) $errors[] = 'Vui lòng chọn Ảnh đại diện.';
+        if ($cateID === '' || $cateID === ' ') $errors[] = 'Vui lòng chọn Danh mục.';
+        if ($supplierID === '' || $supplierID === ' ') $errors[] = 'Vui lòng chọn Nhà cung cấp.';
+        if ($brandID === '' || $brandID === ' ') $errors[] = 'Vui lòng chọn Hãng.';
 
-        // format name file
-        $error = [];
+        if (!empty($errors)) {
+            $_SESSION['product_form_errors'] = $errors;
+            $_SESSION['product_form_old'] = [
+                'name' => $name,
+                'price' => $_POST['price'] ?? '',
+                'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                'discount' => $_POST['discount'] ?? '',
+                'quantity' => $quantity,
+                'size' => $sizeProduct,
+                'hot' => $hot,
+                'description' => $description,
+                'detail' => $detail,
+                'categoryID' => $cateID,
+                'supplierID' => $supplierID,
+                'brandID' => $brandID,
+            ];
+            header('location:add');
+            return;
+        }
+
         $size_allow = 10;
         $fileName = $file['name'];
         $fileName = explode('.', $fileName);
         $ext = end($fileName);
         $new_file_name = md5(uniqid()) . '.' . $ext;
 
-
-        if (
-            $file && $file['name']
-            && $name  && $price  && $sizeProduct
-            && $description && $detail
-            && $cateID && $supplierID && $brandID
-        ) {
-            //Check type file
-            $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
-            if (in_array($ext, $allow_ext)) {
-                $size = $file['size'] / 1024 / 1024;
-                if ($size <= $size_allow) {
-                    $upload = move_uploaded_file($file['tmp_name'], '../product_img/' . $new_file_name);
-                    if (!$upload) {
-                        $error[] = 'error upload';
-                    }
-                } else {
-                    $error = 'size_error';
-                }
-            } else {
-                $error[] = 'ext_error';
-            }
-
-            $data = [
-                'Name' => $name,
-                'Price' => $price,
-                'PromotionPrice' => $promotionPrice,
-                'Discount' => $discount ? $discount : 0,
-                'Quantity' => $quantity, // --- MỚI THÊM: Lưu số lượng ---
-                'Hot' => $hot,
-                'Size' => $sizeProduct,
-                'Img' => $new_file_name,
-                'Description' => $description,
-                'Detail' => $detail,
-                'CateID' => $cateID,
-                'SupplierID' => $supplierID,
-                'BrandID' => $brandID
+        $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
+        if (!in_array(strtolower($ext), $allow_ext)) {
+            $_SESSION['product_form_errors'] = ['Chỉ chấp nhận ảnh: jpg, png, gif, bmp, jpeg, webp.'];
+            $_SESSION['product_form_old'] = [
+                'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
             ];
-            $this->productModel->createProduct($data);
             header('location:add');
-        } else {
-            header('location:add');
+            return;
         }
+        $size = $file['size'] / 1024 / 1024;
+        if ($size > $size_allow) {
+            $_SESSION['product_form_errors'] = ['Kích thước ảnh tối đa ' . $size_allow . 'MB.'];
+            $_SESSION['product_form_old'] = [
+                'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
+            ];
+            header('location:add');
+            return;
+        }
+
+        $upload = move_uploaded_file($file['tmp_name'], '../product_img/' . $new_file_name);
+        if (!$upload) {
+            $_SESSION['product_form_errors'] = ['Không thể tải ảnh lên.'];
+            $_SESSION['product_form_old'] = [
+                'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
+            ];
+            header('location:add');
+            return;
+        }
+
+        $data = [
+            'Name' => $name,
+            'Price' => $price,
+            'PromotionPrice' => $promotionPrice,
+            'Discount' => $discount ? $discount : 0,
+            'Quantity' => $quantity,
+            'Hot' => $hot,
+            'Size' => $sizeProduct,
+            'Img' => $new_file_name,
+            'Description' => $description,
+            'Detail' => $detail,
+            'CateID' => $cateID,
+            'SupplierID' => $supplierID,
+            'BrandID' => $brandID
+        ];
+        $this->productModel->createProduct($data);
+        header('location:add');
     }
 
     public function search()
@@ -143,6 +182,9 @@ class ProductController extends BaseController
         $brands = $this->brandModel->getBrands();
         $suppliers = $this->supplierModel->getSuppliers();
         $product = $this->productModel->getProduct($id);
+        $form_errors = $_SESSION['product_form_errors'] ?? [];
+        $form_old = $_SESSION['product_form_old'] ?? null;
+        unset($_SESSION['product_form_errors'], $_SESSION['product_form_old']);
         $this->view(
             'main-layout',
             [
@@ -152,6 +194,8 @@ class ProductController extends BaseController
                 'brands' => $brands,
                 'suppliers' => $suppliers,
                 'product' => $product,
+                'form_errors' => $form_errors,
+                'form_old' => $form_old,
             ]
         );
     }
@@ -159,119 +203,116 @@ class ProductController extends BaseController
     public function update($id)
     {
         $product = $this->productModel->getProduct($id);
-        $name = $_POST['name'];
+        $name = isset($_POST['name']) ? trim($_POST['name']) : '';
         $price = isset($_POST['price']) && $_POST['price'] !== '' ? floatval($_POST['price']) : $product['Price'];
         $promotionPrice = isset($_POST['promotionPrice']) && $_POST['promotionPrice'] !== ''
             ? floatval($_POST['promotionPrice'])
-            : $price; // Nếu trống, dùng giá gốc
-
+            : $price;
         $discount = isset($_POST['discount']) ? floatval($_POST['discount']) : $product['Discount'];
-
-        // --- MỚI THÊM: Lấy số lượng khi update ---
-        // Kiểm tra xem $product['Quantity'] có tồn tại không để tránh lỗi nếu DB cũ chưa có cột này
         $currentQty = isset($product['Quantity']) ? $product['Quantity'] : 0;
         $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : $currentQty;
-        // -----------------------------------------
+        $sizeProduct = isset($_POST['size']) ? trim($_POST['size']) : '';
+        $hot = isset($_POST['hot']) ? $_POST['hot'] : '0';
+        $description = isset($_POST['description']) ? trim($_POST['description']) : '';
+        $detail = isset($_POST['detail']) ? trim($_POST['detail']) : '';
+        $file = $_FILES['file'] ?? null;
+        $cateID = isset($_POST['categoryID']) ? trim($_POST['categoryID']) : '';
+        $supplierID = isset($_POST['supplierID']) ? trim($_POST['supplierID']) : '';
+        $brandID = isset($_POST['brandID']) ? trim($_POST['brandID']) : '';
 
-        $sizeProduct = $_POST['size'];
-        $hot = $_POST['hot'];
-        $description = $_POST['description'];
-        $detail = $_POST['detail'];
-        $file = $_FILES['file'];
-        $cateID = $_POST['categoryID'];
-        $supplierID = $_POST['supplierID'];
-        $brandID = $_POST['brandID'];
+        $errors = [];
+        if ($name === '') $errors[] = 'Vui lòng nhập Tên sản phẩm.';
+        if ($price <= 0) $errors[] = 'Vui lòng nhập Giá hợp lệ.';
+        if ($sizeProduct === '') $errors[] = 'Vui lòng nhập Size.';
+        if ($description === '') $errors[] = 'Vui lòng nhập Mô tả.';
+        if ($detail === '') $errors[] = 'Vui lòng nhập Thông tin chi tiết (Dung thành phần).';
+        if ($cateID === '' || $cateID === ' ') $errors[] = 'Vui lòng chọn Danh mục.';
+        if ($supplierID === '' || $supplierID === ' ') $errors[] = 'Vui lòng chọn Nhà cung cấp.';
+        if ($brandID === '' || $brandID === ' ') $errors[] = 'Vui lòng chọn Hãng.';
 
-        // format name file
-        $error = [];
+        if (!empty($errors)) {
+            $_SESSION['product_form_errors'] = $errors;
+            $_SESSION['product_form_old'] = [
+                'name' => $name,
+                'price' => $_POST['price'] ?? $product['Price'],
+                'promotionPrice' => $_POST['promotionPrice'] ?? $product['PromotionPrice'],
+                'discount' => $_POST['discount'] ?? $product['Discount'],
+                'quantity' => $quantity,
+                'size' => $sizeProduct,
+                'hot' => $hot,
+                'description' => $description,
+                'detail' => $detail,
+                'categoryID' => $cateID,
+                'supplierID' => $supplierID,
+                'brandID' => $brandID,
+            ];
+            header("location:../edit/{$id}");
+            return;
+        }
+
         $size_allow = 10;
-        $fileName = $file['name'];
-        $fileName = explode('.', $fileName);
-        $ext = end($fileName);
-        $new_file_name = md5(uniqid()) . '.' . $ext;
-
-        //Check type file
-        $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
-        if ($file && $file['name']) {
+        $new_file_name = $product['Img'];
+        if ($file && !empty($file['name'])) {
+            $fileName = explode('.', $file['name']);
+            $ext = end($fileName);
+            $new_file_name = md5(uniqid()) . '.' . $ext;
             $allow_ext = ['jpg', 'png', 'gif', 'bmp', 'jpeg', 'webp'];
-            if (in_array(strtolower($ext), $allow_ext)) { // Thêm strtolower để an toàn
-                $size = $file['size'] / 1024 / 1024;
-                if ($size <= $size_allow) {
-                    // SỬA ĐƯỜNG DẪN TẠI ĐÂY: Bỏ bớt một dấu ../
-                    $upload = move_uploaded_file($file['tmp_name'], '../product_img/'  . $new_file_name);
-                    if ($upload) {
-                        // SỬA ĐƯỜNG DẪN XÓA ẢNH TẠI ĐÂY
-                        if (file_exists('../product_img/' . $product['Img'])) {
-                            unlink('../product_img/' . $product['Img']);
-                        }
-                    }
-                }
+            if (!in_array(strtolower($ext), $allow_ext)) {
+                $_SESSION['product_form_errors'] = ['Chỉ chấp nhận ảnh: jpg, png, gif, bmp, jpeg, webp.'];
+                $_SESSION['product_form_old'] = [
+                    'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                    'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                    'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
+                ];
+                header("location:../edit/{$id}");
+                return;
             }
-        } else {
-            $error[] = 'ext_error';
+            $size = $file['size'] / 1024 / 1024;
+            if ($size > $size_allow) {
+                $_SESSION['product_form_errors'] = ['Kích thước ảnh tối đa ' . $size_allow . 'MB.'];
+                $_SESSION['product_form_old'] = [
+                    'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                    'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                    'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
+                ];
+                header("location:../edit/{$id}");
+                return;
+            }
+            $upload = move_uploaded_file($file['tmp_name'], '../product_img/' . $new_file_name);
+            if (!$upload) {
+                $_SESSION['product_form_errors'] = ['Không thể tải ảnh lên.'];
+                $_SESSION['product_form_old'] = [
+                    'name' => $name, 'price' => $_POST['price'] ?? '', 'promotionPrice' => $_POST['promotionPrice'] ?? '',
+                    'discount' => $_POST['discount'] ?? '', 'quantity' => $quantity, 'size' => $sizeProduct, 'hot' => $hot,
+                    'description' => $description, 'detail' => $detail, 'categoryID' => $cateID, 'supplierID' => $supplierID, 'brandID' => $brandID,
+                ];
+                header("location:../edit/{$id}");
+                return;
+            }
+            if (file_exists('../product_img/' . $product['Img'])) {
+                unlink('../product_img/' . $product['Img']);
+            }
         }
 
         $data = [];
-        if ($name != $product['Name']) {
-            $data['Name'] = $name;
-        }
-
-        if ($price != $product['Price']) {
-            $data['Price'] = $price;
-        }
-
-        if ($promotionPrice != $product['PromotionPrice']) {
-            $data['PromotionPrice'] = $promotionPrice;
-        }
-
-        if ($discount != $product['Discount']) {
-            $data['Discount'] = $discount;
-        }
-
-        // --- MỚI THÊM: Kiểm tra thay đổi số lượng ---
-        if ($quantity != $currentQty) {
-            $data['Quantity'] = $quantity;
-        }
-        // --------------------------------------------
-
-        if ($sizeProduct != $product['Size']) {
-            $data['Size'] = $sizeProduct;
-        }
-
-        if ($cateID != $product['CateID']) {
-            $data['CateID'] = $cateID;
-        }
-
-        if ($brandID != $product['BrandID']) {
-            $data['BrandID'] = $brandID;
-        }
-
-        if ($supplierID != $product['SupplierID']) {
-            $data['SupplierID'] = $supplierID;
-        }
-
-        if ($description != $product['Description']) {
-            $data['Description'] = $description;
-        }
-
-        if ($detail != $product['Detail']) {
-            $data['Detail'] = $detail;
-        }
-
-        if ($hot != $product['Hot']) {
-            $data['Hot'] = $hot;
-        }
-
-        if ($file && $file['name']) {
-            $data['Img'] = $new_file_name;
-        }
+        if ($name != $product['Name']) $data['Name'] = $name;
+        if ($price != $product['Price']) $data['Price'] = $price;
+        if ($promotionPrice != $product['PromotionPrice']) $data['PromotionPrice'] = $promotionPrice;
+        if ($discount != $product['Discount']) $data['Discount'] = $discount;
+        if ($quantity != $currentQty) $data['Quantity'] = $quantity;
+        if ($sizeProduct != $product['Size']) $data['Size'] = $sizeProduct;
+        if ($cateID != $product['CateID']) $data['CateID'] = $cateID;
+        if ($brandID != $product['BrandID']) $data['BrandID'] = $brandID;
+        if ($supplierID != $product['SupplierID']) $data['SupplierID'] = $supplierID;
+        if ($description != $product['Description']) $data['Description'] = $description;
+        if ($detail != $product['Detail']) $data['Detail'] = $detail;
+        if ($hot != $product['Hot']) $data['Hot'] = $hot;
+        if ($file && $file['name']) $data['Img'] = $new_file_name;
 
         if (count($data) > 0) {
             $this->productModel->updateProduct($id, $data);
-            header("location:../edit/{$id}");
-        } else {
-            header("location:../edit/{$id}");
         }
+        header("location:../edit/{$id}");
     }
 
     public function delete()

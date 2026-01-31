@@ -61,6 +61,39 @@ class ProductController extends BaseController
         );
     }
 
+    public function sale()
+    {
+        $categories = $this->categoryModel->getCategories();
+        $products = $this->productModel->getProductDiscount();
+
+        $this->view(
+            'main-layout',
+            [
+                'page' => 'products/index',
+                'pageName' => 'Sale',
+                'title' => 'Sale',
+                'categories' => $categories,
+                'products' => $products
+            ]
+        );
+    }
+    public function hot()
+{
+    $categories = $this->categoryModel->getCategories();
+    $products = $this->productModel->getProductHot();
+
+    $this->view(
+        'main-layout',
+        [
+            'page' => 'products/index',
+            'pageName' => 'Sản phẩm HOT',
+            'titlePage' => 'HOT', 
+            'categories' => $categories,
+            'products' => $products
+        ]
+    );
+}
+
     public function search()
     {
         $name = $_POST['name'];

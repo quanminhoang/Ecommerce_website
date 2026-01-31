@@ -5,7 +5,7 @@
             <div class="content">
                 <div class="product__container">
                     <div class="product__title">
-                        <h2>Danh sách sản phẩm</h2>
+                        <h2><?php echo isset($title) ? $title : 'Danh sách sản phẩm'; ?></h2>
                     </div>
                     <div class="products">
                         <?php foreach ($products as $product) {

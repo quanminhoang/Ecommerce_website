@@ -15,7 +15,7 @@ class ProductModel extends BaseModel
 
     public function getProductHot()
     {
-        $sql = "SELECT * FROM products WHERE status = 1 AND Hot = 1 limit 4";
+        $sql = "SELECT * FROM products WHERE status = 1 AND Hot = 1 LIMIT 8";
         return $this->querySql($sql);
     }
 
@@ -27,9 +27,31 @@ class ProductModel extends BaseModel
 
     public function getProductDiscount()
     {
-        $sql = "SELECT * FROM products WHERE products.Discount != 0 AND products.status = 1 limit 8";
+        $sql = "SELECT * FROM products WHERE products.Discount != 0 AND products.status = 1";
         return $this->querySql($sql);
     }
+
+public function getTopSelling()
+{
+    $sql = "SELECT p.*, SUM(od.Quantity) as TotalSold 
+            FROM products p
+            INNER JOIN orderDetails od ON p.ID = od.ProductID
+            WHERE p.status = 1
+            GROUP BY p.ID
+            ORDER BY TotalSold DESC
+            LIMIT 5";
+            
+    $result = $this->querySql($sql);
+
+    if (empty($result)) {
+        $sql = "SELECT *, 0 as TotalSold FROM products WHERE status = 1 ORDER BY ID DESC LIMIT 3";
+        return $this->querySql($sql);
+    }
+
+    return $result;
+}
+
+
 
     public function searchProduct($name)
     {

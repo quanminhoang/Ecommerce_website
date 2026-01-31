@@ -1,22 +1,23 @@
 <div class="sidebar">
     <div class="featuredProducts">
         <div class="title--border">
-            <p>sản phẩm nổi bật</p>
+            <p>TOP 5 BÁN CHẠY</p>
         </div>
         <ul class="featuredProducts__list">
-
-            <?php while ($product = mysqli_fetch_array($productHot)) { ?>
-                <li class="featuredProducts__item">
-                    <a href="product/show/<?php echo $product['ID'] ?>" class="featuredProducts__link"></a>
-                    <div class="item__img">
-                        <img src="../product_img/<?php echo $product['Img'] ?>" alt="">
-                    </div>
-                    <div class="item__content">
-                        <h2><?php echo $product['Name'] ?></h2>
-                        <p> <?php echo number_format($product['PromotionPrice'], 0, '.', '.');  ?> </p>
-                    </div>
-                </li>
-            <?php } ?>
+            <?php if (!empty($topSelling)): ?>
+                <?php foreach ($topSelling as $item): ?>
+                    <li class="featuredProducts__item">
+                        <a href="product/show/<?php echo $item['ID'] ?>" class="featuredProducts__link"></a>
+                        <div class="item__img">
+                            <img src="../product_img/<?php echo $item['Img'] ?>" alt="">
+                        </div>
+                        <div class="item__content">
+                            <h2><?php echo $item['Name'] ?></h2>
+                            <p><?php echo number_format($item['PromotionPrice'], 0, '.', '.'); ?>₫</p>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </ul>
     </div>
 

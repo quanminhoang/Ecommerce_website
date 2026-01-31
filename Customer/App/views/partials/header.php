@@ -81,17 +81,10 @@
                                 <a href="product" class="menu__link">Sản phẩm</a>
                             </li>
                             <li class="menu__item">
-                                <a class="menu__link">
-                                    Danh mục sản phẩm
-                                    <i class="fa-solid fa-caret-down"></i>
+                                <a href="product/sale" class="menu__link" style="color: #ffff00; font-weight: bold; text-shadow: 1px 1px 2px #000;">
+                                    SALE
+                                    <i class="fa-solid fa-fire" style="margin-left: 5px; color: #ff4500;"></i>
                                 </a>
-                                <ul class="sub-menu">
-                                    <?php foreach ($categories as $category) { ?>
-                                        <li>
-                                            <a href="product/byCate/<?php echo $category['ID'] ?>"><?php echo $category['Name']; ?></a>
-                                        </li>
-                                    <?php } ?>
-                                </ul>
                             </li>
                             <li class="menu__item">
                                 <a href="news" class="menu__link">Tin tức </a>

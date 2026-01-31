@@ -116,14 +116,16 @@
                             </button>
 
                         <?php else: ?>
-                            <p style="color: gray;">
-                                Hết hàng
-                            </p>
+                            <div style="margin-bottom: 30px;">
+                                <p style="color: gray;">
+                                    Hết hàng
+                                </p>
+                            </div>
 
                             <button type="button"
                                 disabled
                                 style="width: 80%; background-color: #ccc; cursor: not-allowed; border: none; padding: 12px; color: #666;">
-                                Hết hàng
+                                Thêm vào giỏ
                             </button>
 
                         <?php endif; ?>

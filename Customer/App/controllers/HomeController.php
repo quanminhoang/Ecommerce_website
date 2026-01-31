@@ -16,10 +16,12 @@ class HomeController extends BaseController
         $productHot = $this->productModel->getProductHot();
         $products = $this->productModel->getProducts(['ID', 'DESC'], 8);
         $productDiscount = $this->productModel->getProductDiscount();
+        $topSelling = $this->productModel->getTopSelling();        
         $this->view(
             'main-layout',
             [
                 'page' => 'home/index',
+                'topSelling' => $topSelling,
                 'pageName' => 'Shop Mô Hình',
                 'categories' => $categories,
                 'productHot' => $productHot,

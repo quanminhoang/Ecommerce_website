@@ -29,7 +29,7 @@
                             echo $date;
                             ?>
                         </td>
-                        <td class="width-150">
+                        <td class="width-150 text-center">
                             <p class="btn-status 
                             <?php
                             echo $status = $order['StatusOrder'] == 1 ? 'btn-status--pending' : '';

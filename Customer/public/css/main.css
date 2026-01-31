@@ -22,6 +22,18 @@ html {
     scroll-behavior: smooth;
 }
 
+.header-logo {
+    height: 40px;        
+    width: 40px;           
+    
+    display: inline-block;
+    vertical-align: middle; 
+    
+    margin: 10px 0;        
+    padding-left: 15px; 
+    
+    transition: all 0.3s ease;
+}
 body {
     min-height: 100vh;
     font-family: arial, sans-serif;
@@ -112,7 +124,7 @@ main {
 .title--border {
     padding: 1px 0;
     background-color: #dc3333 !important;
-    border:1px solid #ebebeb;
+    border: 1px solid #ebebeb;
     border-radius: 4px;
 }
 
@@ -197,9 +209,14 @@ main {
 }
 
 .form.bill {
-    max-width: 50%;
-    margin-left: 0;
-    flex: 1;
+    width: 100% !important; 
+    max-width: none !important;
+    margin-left: 0 !important; 
+    flex: none !important;     
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #ebebeb;
+    border-radius: 8px;
 }
 
 .form .form__title {
@@ -465,9 +482,12 @@ main {
 }
 
 .header-main__container .header__logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 80px;        
+    height: 80px;         
+    object-fit: contain;   
+    
+    display: block;
+    margin: 5px 0;
     cursor: pointer;
 }
 
@@ -1135,7 +1155,7 @@ main {
 }
 
 .collection__container .content .product__container .products .card__actions a:first-child {
-    border-right: 1px solid rgba(255,255,255,0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .collection__container .content .product__container .products .card__content {
@@ -1605,7 +1625,6 @@ main {
     padding: 20px 10px;
 }
 
-
 .cart__table table tbody {
     background-color: #fff;
 }
@@ -1739,22 +1758,11 @@ main {
     color: #333;
 }
 
-/* Ô chứa cuối cùng */
-.price-column {
-    position: relative;
-    min-width: 120px;
-    /* Cố định chiều rộng cho con số */
-    /* Làm gốc để nút xoá bám vào */
-    vertical-align: middle !important;
-    /* Giữ số tiền nằm giữa dòng ngang với ảnh */
-    font-weight: bold;
-}
 
 /* Nút xoá đặt ở góc trên bên phải */
 .cart-remove-btn {
     position: absolute;
     top: 10px;
-    /* Khoảng cách từ mép trên ô */
     right: 10px;
     text-decoration: none;
     font-size: 14px;
@@ -1774,63 +1782,198 @@ main {
 }
 
 .cart__table table td:last-child {
-    text-align: right;
-    padding-right: 25px;
+    text-align: center;
 }
 
 
+.pay {
+    background-color: #f0f2f5;
+    padding: 60px 0; /* Tạo khoảng trống trên dưới cho thoáng */
+    min-height: 100vh;
+    display: block; /* Chuyển về block bình thường để Grid bên trong tự bung */
+}
 
 .pay__container {
-    display: flex;
-    gap: 0 20px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr; 
+    gap: 40px;
+    align-items: start;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
 }
 
+/* Hiệu ứng cho trang Cảm ơn (nếu có class .thank) */
 .pay__container.thank {
-    padding: 40px;
-    background: #e4f1c9;
-    border: 1px solid #a5bd71;
+    background: #f1f9e7; /* Xanh lá dịu hơn */
+    border: 2px dashed #a5bd71;
+    display: block; /* Trang cảm ơn thường chỉ cần 1 cột */
+    text-align: center;
 }
 
-.pay__thank {
-    margin-top: 20px;
-    font-size: 16px;
-    line-height: 24px;
-    padding-right: 10%;
+/* Cột bên trái: Form thanh toán */
+.form.bill {
+    width: 100% !important; 
+    max-width: none !important;
+    margin-left: 0 !important;   /* Xóa bỏ khoảng cách 10% bên trái */
+    flex: none !important;}
+
+.form-group {
+    margin-bottom: 15px;
 }
 
-.pay__right {
-    width: 50%;
-}
-
-.pay__right .pay__logo {
+.form-group input, 
+.form-group select, 
+.bill_input {
     width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #e74c3c; /* Màu đỏ theo logo mới */
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.2);
+}
+
+/* Cột bên phải: Thông tin Shop */
+.pay__right {
+    background: #ffffff; /* Để nền trắng cho sạch */
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid #e74c3c; /* Thêm viền đỏ mảnh cho sang */
+    text-align: center; /* Căn giữa toàn bộ text và logo */
 }
 
 .pay__right .pay__logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 130px !important; /* Fix cứng kích thước logo mới */
+    height: auto;
+    border-radius: 0; /* Logo này không cần tròn */
+    margin: 0 auto 15px;
+    display: block;
+}
+
+.pay__right ul li {
+    justify-content: flex-start; /* Giữ icon và text dính nhau bên trái */
+    text-align: left;
+    border-bottom: 1px dashed #eee; /* Thêm đường kẻ gạch cho tinh tế */
 }
 
 .pay__right p {
-    margin-top: 10px;
-    line-height: 24px;
-    color: #333;
+    font-size: 15px;
+    color: #555;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
 }
 
 .pay__right ul {
-    margin-top: 20px;
-    margin-left: 40px;
+    margin-top: 15px;
+    padding-left: 0;
 }
 
 .pay__right ul li {
     list-style: none;
-    padding: 8px 0;
-    color: #333;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #444;
+    display: flex;
+    align-items: center;
 }
 
 .pay__right ul li i {
-    margin-right: 4px;
+    color: #e74c3c; /* Icon màu đỏ cho đồng bộ */
+    margin-right: 12px;
+    width: 18px;
+    text-align: center;
+}
+
+/* Responsive cho Mobile */
+@media (max-width: 768px) {
+    .pay__container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .pay__right {
+        order: -1; /* Đưa thông tin shop lên đầu trên điện thoại */
+    }
+}
+
+.btn-action {
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 4px;
+    padding: 5px 12px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #ccc;
+    /* Viền mặc định */
+    color: #333;
+}
+
+/* Màu riêng cho nút Xem chi tiết */
+.btn-action--view {
+    color: #405189 !important;
+    border-color: #405189 !important;
+    background-color: transparent;
+}
+
+.btn-action--view:hover {
+    background-color: #405189 !important;
+    color: #fff !important;
+}
+
+.order-footer {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.btn-back {
+    cursor: pointer;
+    background-color: transparent;
+    color: #3498db;                
+    padding: 10px 25px;
+    border: 1px solid #3498db;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-back:hover {
+    background-color: #3498db;     /* Khi hover sẽ lấp đầy màu xanh */
+    color: #fff;                   /* Chữ chuyển sang trắng */
+    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+}
+
+/* Nút hủy đơn - Tinh tế, không quá gắt */
+.btn-cancel {
+    cursor: pointer;
+    background-color: transparent;
+    color: #e74c3c;
+    padding: 10px 25px;
+    border: 1px solid #e74c3c;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.btn-cancel:hover {
+    box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
 }
 
 .footer {
@@ -1875,4 +2018,32 @@ main {
     transition: all 0.3s ease;
 }
 
-/*# sourceMappingURL=main.css.map */
+/* Thẻ Thank You */
+.thank-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 550px;
+    width: 100%;
+    animation: fadeInUp 0.8s ease;
+}
+
+.pay__logo img {
+    max-width: 120px;
+    margin: 0 auto 20px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

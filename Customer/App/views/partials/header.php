@@ -51,7 +51,7 @@
                             <?php echo $name = isset($_SESSION['customer']) ? $_SESSION['customer']['Name'] : '' ?>
                         </p>
                         <ul>
-                            <li><a href="order/sayHi">Đơn hàng của tôi</a></li>
+                            <li><a href="order/history">Đơn hàng của tôi</a></li>
                             <li>
                                 <a href="auth/logout">
                                     <i class="fa-solid fa-right-from-bracket"></i>

@@ -48,4 +48,10 @@ class ProductModel extends BaseModel
 
         return $this->querySql($sql);
     }
+
+    public function plusStock($id, $qty)
+    {
+        $sql = "UPDATE products SET Quantity = Quantity + $qty WHERE ID = $id";
+        return $this->querySql($sql);
+    }
 }

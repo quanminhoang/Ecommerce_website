@@ -25,4 +25,34 @@ class orderModel extends BaseModel
     {
         $this->update(self::TableName, $id, $data);
     }
+    /* Dán vào trong file OrderModel.php */
+    public function getOrdersByCustomer($customerId)
+    {
+        $sql = "SELECT * FROM orders WHERE CustomerID = $customerId ORDER BY ID DESC";
+        return $this->querySql($sql);
+    }
+
+    public function getOrderById($id)
+    {
+        $sql = "SELECT orders.*, customers.Name 
+            FROM orders, customers 
+            WHERE orders.CustomerID = customers.ID 
+            AND orders.ID = $id";
+        $result = $this->querySql($sql);
+        return mysqli_fetch_array($result);
+    }
+
+    public function getOrderDetails($id)
+    {
+        $sql = "SELECT orderdetails.*, products.Name, products.img 
+            FROM orderdetails, products 
+            WHERE orderdetails.ProductID = products.ID 
+            AND orderdetails.OrderID = $id";
+        return $this->querySql($sql);
+    }
+
+    public function updateOrder($id, $data)
+    {
+        return $this->update(self::TableName, $id, $data);
+    }
 }

@@ -26,12 +26,13 @@ class orderController extends BaseController
     public function sayHi()
     {
         $categories = $this->categoryModel->getCategories();
-        $orders = $this->orderModel->getOrders($_SESSION['customer']['ID']);
+        $orders = $this->orderModel->getOrdersByCustomer($_SESSION['customer']['ID']);
+
         $this->view(
             'main-layout',
             [
                 'pageName' => 'Lịch sử mua hàng',
-                'page' => 'orders/index',
+                'page' => 'orders/history',
                 'categories' => $categories,
                 'orders' => $orders
             ]
@@ -291,6 +292,24 @@ class orderController extends BaseController
         }
     }
 
+    public function cancelOrder($id)
+    {
+        $order = $this->orderModel->getOrderById($id);
+        // Cho phép hủy nếu đang ở trạng thái 1 hoặc 2
+        if ($order && ($order['StatusOrder'] == 1 || $order['StatusOrder'] == 2)) {
+            // Cộng lại kho
+            $orderDetails = $this->orderModel->getOrderDetails($id);
+            mysqli_data_seek($orderDetails, 0);
+            while ($item = mysqli_fetch_array($orderDetails)) {
+                $this->productModel->plusStock($item['ProductID'], $item['Quantity']);
+            }
+            $this->orderModel->updateOrder($id, ['StatusOrder' => 3]);
+            header("location:../show/{$id}");
+        } else {
+            echo "<script>alert('Không thể hủy đơn!'); window.location.href='../show/$id';</script>";
+        }
+    }
+
 
     public function ipn()
     {
@@ -357,5 +376,23 @@ class orderController extends BaseController
             'categories' => $categories,
             'resultCode' => $resultCode
         ]);
+    }
+
+    public function show($id)
+    {
+        $categories = $this->categoryModel->getCategories();
+        $order = $this->orderModel->getOrderById($id);
+        $orderDetails = $this->orderModel->getOrderDetails($id);
+
+        $this->view(
+            'main-layout',
+            [
+                'pageName' => 'Chi tiết đơn hàng',
+                'page' => 'orders/showOrder',
+                'categories' => $categories,
+                'order' => $order,
+                'orderDetails' => $orderDetails
+            ]
+        );
     }
 }

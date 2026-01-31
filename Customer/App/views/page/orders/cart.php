@@ -18,12 +18,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th class="w-5 text-center"></th>
-                                <th class="w-30 text-left">Sản phẩm</th>
+                                <th class="w-5 text-left"></th>
+                                <th class="w-5 text-left">Ảnh sản Phẩm</th>
+                                <th class="w-20 text-left">Tên sản phẩm</th>
                                 <th class="w-10 text-center">Size</th>
                                 <th class="w-15 text-center">Đơn giá</th>
                                 <th class="w-10 text-center">Số lượng</th>
-                                <th class="w-15 text-right">Thành tiền</th>
+                                <th class="w-15 text-center">Thành tiền</th>
 
                             </tr>
                         </thead>
@@ -35,15 +36,22 @@
                                 $total += $subtotal;
                             ?>
                                 <tr>
-
-                                    <td class="w-5 text-left">
+                                    <td class="w-5 text-center" style="position: relative; vertical-align: middle;">
+                                        <a href="order/deleteCart/<?php echo $key; ?>"
+                                            class="cart-remove-btn"
+                                            onclick="return confirm('Xóa sản phẩm này?')"
+                                            style="position: static; color: #333; font-size: 18px;">
+                                            <i class="fa-regular fa-xmark"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-left">
                                         <div class="img">
                                             <img src="../product_img/<?php echo $value['Img'] ?>"
                                                 onerror="this.onerror=null;this.src='public/img/image.png';"
                                                 alt="Product">
                                         </div>
                                     </td>
-                                    <td class="w-30 text-left"><?php echo $value['Name']; ?></td>
+                                    <td class="w-20 text-left"><?php echo $value['Name']; ?></td>
                                     <td class="w-10 text-center"><?php echo $value['Size']; ?></td>
                                     <td class="w-15 text-center"><?php echo number_format($priceToUse, 0, '.', '.'); ?> VNĐ</td>
                                     <td class="w-10 text-left">
@@ -60,14 +68,8 @@
                                             <?php endif; ?>
                                         </div>
                                     </td>
-                                    <td class="w-15 price-column text-center">
-                                        <a href="order/deleteCart/<?php echo $key; ?>" class="cart-remove-btn" onclick="return confirm('Xóa sản phẩm này?')">
-                                            <i class="fa-regular fa-xmark"></i>
-                                        </a>
-
-                                        <span class="subtotal-amount">
+                                    <td class="w-15 price-column text-center" style="font-weight: Bold;">
                                             <?php echo number_format($subtotal, 0, '.', '.') . ' VNĐ'; ?>
-                                        </span>
                                     </td>
                                 </tr>
                             <?php } ?>

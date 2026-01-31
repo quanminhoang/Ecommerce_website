@@ -83,7 +83,7 @@
                             <li class="menu__item">
                                 <a href="product/sale" class="menu__link" style="color: #ffff00; font-weight: bold; text-shadow: 1px 1px 2px #000;">
                                     SALE
-                                    <i class="fa-solid fa-fire" style="margin-left: 5px; color: #ff4500;"></i>
+                                    <i class="fa-solid fa-fire" style="margin-left: 5px; color: #ffff00;"></i>
                                 </a>
                             </li>
                             <li class="menu__item">

@@ -41,7 +41,7 @@
                                             class="cart-remove-btn"
                                             onclick="return confirm('Xóa sản phẩm này?')"
                                             style="position: static; color: #333; font-size: 18px;">
-                                            <i class="fa-regular fa-xmark"></i>
+                                            <i class="fa-regular fa-trash-can"></i>
                                         </a>
                                     </td>
                                     <td class="text-left">

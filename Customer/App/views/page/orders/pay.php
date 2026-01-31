@@ -33,19 +33,19 @@
 
                 <div class="form-group">
                     <textarea placeholder="Hóa đơn" rows="10" readonly class="bill_input">
-<?php
-if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
-    $total = 0;
-    foreach ($_SESSION['cart'] as $value) {
-        $total += $value['PromotionPrice'] * $value['Quantity'];
-        echo '- ' . $value['Name'] . ' - Size ' . $value['Size'] . ' -- '
-            . '( ' . number_format($value['PromotionPrice'], 0, ',', ',')
-            . ' x ' . $value['Quantity']  . ' = '
-            . number_format($value['PromotionPrice'] * $value['Quantity'], 0, ',', ',') . ' )' . '&#13';
-    }
-    echo '&#13' . "- Tổng tiền: " . number_format($total, 0, ',', ',') . " VNĐ";
-}
-?>
+                        <?php
+                        if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+                            $total = 0;
+                            foreach ($_SESSION['cart'] as $value) {
+                                $total += $value['PromotionPrice'] * $value['Quantity'];
+                                echo '- ' . $value['Name'] . ' - Size ' . $value['Size'] . ' -- '
+                                    . '( ' . number_format($value['PromotionPrice'], 0, ',', ',')
+                                    . ' x ' . $value['Quantity']  . ' = '
+                                    . number_format($value['PromotionPrice'] * $value['Quantity'], 0, ',', ',') . ' )' . '&#13';
+                            }
+                            echo '&#13' . "- Tổng tiền: " . number_format($total, 0, ',', ',') . " VNĐ";
+                        }
+                        ?>
                     </textarea>
                 </div>
 
@@ -67,80 +67,79 @@ if (isset($_SESSION['cart']) && is_array($_SESSION['cart'])) {
             </div>
         </div>
     </div>
-</div>
 
 
-<script>
-    $(document).ready(function() {
-        const inputs = $(".pay__container .form-group input[name!='note'], .pay__container .form-group select");
+    <script>
+        $(document).ready(function() {
+            const inputs = $(".pay__container .form-group input[name!='note'], .pay__container .form-group select");
 
-        function showError(el, msg) {
-            const parent = el.parent();
-            parent.addClass('active');
-            if (!parent.find('.err').length) parent.append('<span class="err">' + msg + '</span>');
-        }
-
-        function clearError(el) {
-            const parent = el.parent();
-            parent.removeClass('active');
-            parent.find('.err').remove();
-        }
-
-        function getFieldName(el) {
-            switch (el.attr('name')) {
-                case 'nameReceive':
-                    return 'Tên Người nhận';
-                case 'addressReceive':
-                    return 'Địa chỉ người nhận';
-                case 'phoneReceive':
-                    return 'Số điện thoại người nhận';
-                case 'payment':
-                    return 'Phương thức thanh toán';
-                default:
-                    return '';
+            function showError(el, msg) {
+                const parent = el.parent();
+                parent.addClass('active');
+                if (!parent.find('.err').length) parent.append('<span class="err">' + msg + '</span>');
             }
-        }
 
-        inputs.on('blur', function() {
-            const val = $(this).val().trim();
-            clearError($(this));
-
-            if (!val) {
-                showError($(this), 'Vui lòng điền ' + getFieldName($(this)));
-            } else if ($(this).attr('name') === 'phoneReceive') {
-                const phoneRegex = /^[0-9]{9,12}$/;
-                if (!phoneRegex.test(val)) showError($(this), 'Số điện thoại không hợp lệ');
+            function clearError(el) {
+                const parent = el.parent();
+                parent.removeClass('active');
+                parent.find('.err').remove();
             }
-        });
 
-        inputs.on('input change', function() {
-            clearError($(this));
-        });
+            function getFieldName(el) {
+                switch (el.attr('name')) {
+                    case 'nameReceive':
+                        return 'Tên Người nhận';
+                    case 'addressReceive':
+                        return 'Địa chỉ người nhận';
+                    case 'phoneReceive':
+                        return 'Số điện thoại người nhận';
+                    case 'payment':
+                        return 'Phương thức thanh toán';
+                    default:
+                        return '';
+                }
+            }
 
-        $("#payForm").submit(function(e) {
-            console.log("Submitting form..."); // debug
-            let hasError = false;
-
-            inputs.each(function() {
+            inputs.on('blur', function() {
                 const val = $(this).val().trim();
                 clearError($(this));
 
                 if (!val) {
                     showError($(this), 'Vui lòng điền ' + getFieldName($(this)));
-                    hasError = true;
                 } else if ($(this).attr('name') === 'phoneReceive') {
                     const phoneRegex = /^[0-9]{9,12}$/;
-                    if (!phoneRegex.test(val)) {
-                        showError($(this), 'Số điện thoại không hợp lệ');
-                        hasError = true;
-                    }
+                    if (!phoneRegex.test(val)) showError($(this), 'Số điện thoại không hợp lệ');
                 }
             });
 
-            if (hasError) {
-                e.preventDefault();
-                console.log("Form has errors, prevented submit.");
-            }
+            inputs.on('input change', function() {
+                clearError($(this));
+            });
+
+            $("#payForm").submit(function(e) {
+                console.log("Submitting form..."); // debug
+                let hasError = false;
+
+                inputs.each(function() {
+                    const val = $(this).val().trim();
+                    clearError($(this));
+
+                    if (!val) {
+                        showError($(this), 'Vui lòng điền ' + getFieldName($(this)));
+                        hasError = true;
+                    } else if ($(this).attr('name') === 'phoneReceive') {
+                        const phoneRegex = /^[0-9]{9,12}$/;
+                        if (!phoneRegex.test(val)) {
+                            showError($(this), 'Số điện thoại không hợp lệ');
+                            hasError = true;
+                        }
+                    }
+                });
+
+                if (hasError) {
+                    e.preventDefault();
+                    console.log("Form has errors, prevented submit.");
+                }
+            });
         });
-    });
-</script>
+    </script>
